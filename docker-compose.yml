@@ -23,6 +23,7 @@ services:
       - ./script.js:/usr/share/nginx/html/script.js:ro
       - ./cat.glb:/usr/share/nginx/html/cat.glb:ro
       - ./floor_lamp.glb:/usr/share/nginx/html/floor_lamp.glb:ro
+      - ./favicon.svg:/usr/share/nginx/html/favicon.svg:ro
     depends_on:
       - vr-escape-room
     restart: unless-stopped
