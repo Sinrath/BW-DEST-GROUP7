@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   vr-escape-room:
     build: .
@@ -10,6 +8,20 @@ services:
       - NODE_ENV=production
     volumes:
       - ./certs:/app/certs:ro
+    networks:
+      - vr-network
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      - vr-escape-room
+    restart: unless-stopped
     networks:
       - vr-network
 
