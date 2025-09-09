@@ -24,7 +24,7 @@ with socketserver.TCPServer(("0.0.0.0", PORT), Handler) as httpd:
     cert_locations = [
         ('certs/server.crt', 'certs/server.key'),
         ('server.crt', 'server.key'),
-        ('/etc/letsencrypt/live/yourdomain.com/fullchain.pem', '/etc/letsencrypt/live/yourdomain.com/privkey.pem')
+        ('/etc/letsencrypt/live/openly-escape-room.ch/fullchain.pem', '/etc/letsencrypt/live/openly-escape-room.ch/privkey.pem')
     ]
     
     cert_loaded = False
