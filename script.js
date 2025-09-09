@@ -9,6 +9,7 @@ let gameState = {
 
 let inventory = [];
 
+
 // Initialize the game when A-Frame is loaded
 AFRAME.registerComponent('escape-room', {
     init: function () {
