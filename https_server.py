@@ -19,7 +19,26 @@ Handler = MyHTTPRequestHandler
 with socketserver.TCPServer(("0.0.0.0", PORT), Handler) as httpd:
     # Create SSL context
     context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-    context.load_cert_chain('server.crt', 'server.key')
+    
+    # Look for certificates in different locations
+    cert_locations = [
+        ('certs/server.crt', 'certs/server.key'),
+        ('server.crt', 'server.key'),
+        ('/etc/letsencrypt/live/yourdomain.com/fullchain.pem', '/etc/letsencrypt/live/yourdomain.com/privkey.pem')
+    ]
+    
+    cert_loaded = False
+    for cert_path, key_path in cert_locations:
+        if os.path.exists(cert_path) and os.path.exists(key_path):
+            context.load_cert_chain(cert_path, key_path)
+            cert_loaded = True
+            print(f"Using certificates: {cert_path}, {key_path}")
+            break
+    
+    if not cert_loaded:
+        print("Error: No SSL certificates found!")
+        print("Please run the setup script or generate certificates manually.")
+        exit(1)
     
     httpd.socket = context.wrap_socket(httpd.socket, server_side=True)
     

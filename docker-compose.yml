@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  vr-escape-room:
+    build: .
+    ports:
+      - "8443:8443"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./certs:/app/certs:ro
+    networks:
+      - vr-network
+
+networks:
+  vr-network:
+    driver: bridge
