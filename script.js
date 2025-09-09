@@ -9,6 +9,50 @@ let gameState = {
 
 let inventory = [];
 
+// Rock-solid collision system
+AFRAME.registerComponent('simple-collision', {
+    init: function () {
+        this.maxDistance = 2.9; // Stay within 6x6 area (±2.9 from center)
+        this.previousPosition = new THREE.Vector3();
+        this.el.addEventListener('componentchanged', this.checkBounds.bind(this));
+    },
+
+    tick: function () {
+        this.checkBounds();
+    },
+
+    checkBounds: function () {
+        const position = this.el.getAttribute('position');
+        const currentPos = new THREE.Vector3(position.x, position.y, position.z);
+        
+        // Store Y position (don't constrain vertical movement)
+        const originalY = currentPos.y;
+        
+        // Check if outside bounds
+        let corrected = false;
+        
+        if (Math.abs(currentPos.x) > this.maxDistance) {
+            currentPos.x = Math.sign(currentPos.x) * this.maxDistance;
+            corrected = true;
+        }
+        
+        if (Math.abs(currentPos.z) > this.maxDistance) {
+            currentPos.z = Math.sign(currentPos.z) * this.maxDistance;
+            corrected = true;
+        }
+        
+        // Apply correction
+        if (corrected) {
+            this.el.setAttribute('position', {
+                x: currentPos.x,
+                y: originalY,
+                z: currentPos.z
+            });
+        }
+    }
+});
+
+
 
 // Initialize the game when A-Frame is loaded
 AFRAME.registerComponent('escape-room', {
