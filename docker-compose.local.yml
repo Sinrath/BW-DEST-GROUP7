@@ -1,0 +1,32 @@
+services:
+  vr-escape-room:
+    build: .
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+      - USE_HTTP=true
+    networks:
+      - vr-network
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.local.conf:/etc/nginx/nginx.conf:ro
+      - ./aframe-extras:/usr/share/nginx/html/aframe-extras:ro
+      - ./script.js:/usr/share/nginx/html/script.js:ro
+      - ./cat.glb:/usr/share/nginx/html/cat.glb:ro
+      - ./floor_lamp.glb:/usr/share/nginx/html/floor_lamp.glb:ro
+      - ./favicon.svg:/usr/share/nginx/html/favicon.svg:ro
+    depends_on:
+      - vr-escape-room
+    restart: unless-stopped
+    networks:
+      - vr-network
+
+networks:
+  vr-network:
+    driver: bridge
