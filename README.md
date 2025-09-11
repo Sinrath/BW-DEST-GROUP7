@@ -1,4 +1,5 @@
 # BW-DEST-GROUP7
+
 VR Escape Room
 
 ## Development
@@ -17,4 +18,4 @@ Run the application in production with HTTPS:
 docker compose up --build
 ```
 
-Access at: https://your-domain.com
+Access at: https://openly-escape-room.ch
