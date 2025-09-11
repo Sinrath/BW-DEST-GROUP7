@@ -69,8 +69,66 @@ AFRAME.registerComponent('entrance-navigation', {
         doors.forEach(door => {
             door.addEventListener('click', handleDoorClick);
         });
+
+        // Add click listener to START button
+        const startButton = document.querySelector('#start-button');
+        if (startButton) {
+            startButton.addEventListener('click', handleStartClick);
+        }
+
+        // Add specific click listener to door (handles GLTF models better)
+        const doorElement = document.querySelector('#door-room1');
+        if (doorElement) {
+            doorElement.addEventListener('click', handleDoorClick);
+        }
     }
 });
+
+function handleStartClick(event) {
+    console.log('START button clicked!');
+    
+    // Hide welcome elements
+    const speechBubble = document.querySelector('#speech-bubble');
+    const startButton = document.querySelector('#start-button');
+    
+    if (speechBubble) {
+        speechBubble.setAttribute('animation', 'property: scale; to: 0 0 0; dur: 500');
+        setTimeout(() => {
+            speechBubble.setAttribute('visible', 'false');
+        }, 500);
+    }
+    
+    if (startButton) {
+        startButton.setAttribute('animation', 'property: scale; to: 0 0 0; dur: 500');
+        setTimeout(() => {
+            startButton.setAttribute('visible', 'false');
+        }, 500);
+    }
+    
+    // Show Room 1 door and message after animation
+    setTimeout(() => {
+        const door = document.querySelector('#door-room1');
+        const doorLabel = document.querySelector('#room1-label');
+        const message = document.querySelector('#message');
+        
+        if (door) {
+            door.setAttribute('visible', 'true');
+            door.setAttribute('animation', 'property: scale; from: 0 0 0; to: 0.013 0.013 0.013; dur: 800');
+            // Make door clickable by adding the door class
+            door.classList.add('door');
+        }
+        
+        if (doorLabel) {
+            doorLabel.setAttribute('visible', 'true');
+            doorLabel.setAttribute('animation', 'property: scale; from: 0 0 0; to: 1 1 1; dur: 800');
+        }
+        
+        if (message) {
+            message.setAttribute('visible', 'true');
+            message.setAttribute('animation', 'property: scale; from: 0 0 0; to: 1 1 1; dur: 800');
+        }
+    }, 600);
+}
 
 function handleDoorClick(event) {
     const door = event.target;
@@ -79,13 +137,8 @@ function handleDoorClick(event) {
     if (targetRoom) {
         console.log('Navigating to:', targetRoom);
         
-        // Visual feedback
-        door.setAttribute('animation', 'property: material.color; to: #00FF00; dur: 200; dir: alternate');
-        
-        // Navigate after short delay for visual feedback
-        setTimeout(() => {
-            navigateToRoom(targetRoom);
-        }, 300);
+        // Navigate immediately without animation
+        navigateToRoom(targetRoom);
     }
 }
 
