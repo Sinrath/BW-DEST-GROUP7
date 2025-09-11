@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>VR Escape Room</title>
+    <meta name="description" content="VR Escape Room - A-Frame">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <!-- A-Frame -->
+    <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
+
+    <!-- A-Frame Extras (movement controls and collision) -->
+    <script src="../aframe-extras/dist/aframe-extras.js"></script>
+    <script src="https://unpkg.com/aframe-look-at-component@1.0.0/dist/aframe-look-at-component.min.js"></script>
+
+    <script src="entrance.js"></script>
+
+</head>
+<body>
+<a-scene background="color: #f0f0f0"
+         vr-mode-ui="enabled: true">
+
+
+    <!-- Assets -->
+    <a-assets>
+    </a-assets>
+
+    <!-- Lighting -->
+    <a-light type="ambient" color="#ffffff" intensity="0.8"></a-light>
+    <a-light type="directional" position="2 4 2" color="#ffffff" intensity="1.2"></a-light>
+    <a-light type="point" position="0 3 0" color="#ffffff" intensity="1.0" distance="10"></a-light>
+
+    <!-- Entrance Area Structure -->
+    <a-box position="0 -0.05 0" width="8" height="0.1" depth="8"
+           material="color: #e0e0e0; roughness: 0.3"></a-box>
+    <a-box position="0 3.05 0" width="8" height="0.1" depth="8"
+           material="color: #f5f5f5; roughness: 0.2"></a-box>
+
+    <!-- Entrance Walls -->
+    <a-box position="0 1.5 -4" width="8" height="3" depth="0.3"
+           material="color: #d0d0d0; roughness: 0.4"></a-box>
+    <a-box position="-2 1.5 4" width="4" height="3" depth="0.3"
+           material="color: #d0d0d0; roughness: 0.4"></a-box>
+    <a-box position="2 1.5 4" width="4" height="3" depth="0.3"
+           material="color: #d0d0d0; roughness: 0.4"></a-box>
+    <a-box position="-4 1.5 0" width="0.3" height="3" depth="8"
+           material="color: #d0d0d0; roughness: 0.4"></a-box>
+    <a-box position="4 1.5 0" width="0.3" height="3" depth="8"
+           material="color: #d0d0d0; roughness: 0.4"></a-box>
+
+    <!-- Door to Room 1 -->
+    <a-box id="door-room1" position="0 1.5 3.5" width="2" height="2.8" depth="0.2"
+           material="color: #666666; roughness: 0.3"
+           class="door" data-target="./room1/room1.html"></a-box>
+    <a-text position="0 2.8 3.2" rotation="0 180 0" value="ROOM 1" align="center"
+            color="red" scale="1.0 1.0 1.0"></a-text>
+
+    <!-- Room Title -->
+    <a-text position="0 2.5 -3" value="ENTRANCE" align="center"
+            color="black" scale="1.2 1.2 1.2"></a-text>
+
+
+    <!-- Player Rig -->
+    <a-entity id="rig"
+              position="0 1.6 2"
+              movement-controls="controls: keyboard"
+              simple-collision>
+        <a-entity id="playerCam" camera look-controls>
+            <a-cursor position="0 0 -1"
+                      geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                      material="color: white; shader: flat"
+                      raycaster="objects: .door; showLine: true"></a-cursor>
+        </a-entity>
+
+        <a-entity id="leftHand"
+                  hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
+        <a-entity id="rightHand"
+                  hand-controls="hand: right; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
+    </a-entity>
+
+
+    <!-- UI Text -->
+    <a-text id="message" position="0 2.8 2"
+            value="Welcome to the Multi-Room Escape!\nUse the door to navigate."
+            align="center" color="cyan" scale="0.5 0.5 0.5" look-at="#playerCam"></a-text>
+</a-scene>
+</body>
+</html>

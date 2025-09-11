@@ -6,7 +6,7 @@ VR Escape Room
 ### Local Development
 Run the application locally with HTTP:
 ```bash
-docker-compose -f docker-compose.local.yml up --build
+docker compose -f docker-compose.local.yml up --build
 ```
 
 Access at: http://localhost

@@ -2,135 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="refresh" content="0; url=src/entrance.html">
     <title>VR Escape Room</title>
     <meta name="description" content="VR Escape Room - A-Frame">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-
-    <!-- A-Frame -->
-    <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
-
-    <!-- A-Frame Extras (movement controls and collision) -->
-    <script src="./aframe-extras/dist/aframe-extras.js"></script>
-
-    <script src="script.js"></script>
-
 </head>
 <body>
-<a-scene background="color: #000"
-         vr-mode-ui="enabled: true">
-
-
-    <!-- Assets -->
-    <a-assets>
-        <a-asset-item id="cat-model" src="./cat.glb"></a-asset-item>
-        <a-asset-item id="lamp-model" src="./floor_lamp.glb"></a-asset-item>
-    </a-assets>
-
-    <!-- Lighting -->
-    <a-light type="ambient" color="#404040" intensity="0.3"></a-light>
-    <a-light type="directional" position="2 4 2" color="#ffffff"
-             intensity="0.5"></a-light>
-    <a-light type="point" position="1.5 2.2 -1.5" color="#ffeb99"
-             intensity="2.5" distance="12" decay="1.5"></a-light>
-    <a-light type="spot" position="1.5 2.2 -1.5" color="#ffe680"
-             intensity="1.8"
-             angle="60" penumbra="0.3" target="#lamp-light-target"
-             distance="10"></a-light>
-    <a-entity id="lamp-light-target" position="1.5 0 -1.5"></a-entity>
-
-    <!-- Room Structure -->
-    <a-box position="0 -0.05 0" width="8" height="0.1" depth="8"
-           material="color: #654321; roughness: 0.8"></a-box>
-    <a-box position="0 3.05 0" width="8" height="0.1" depth="8"
-           material="color: #333; roughness: 0.9"></a-box>
-
-    <!-- Walls -->
-    <a-box position="0 1.5 -4" width="8" height="3" depth="0.3"
-           material="color: #8B4513; roughness: 0.7"></a-box>
-    <a-box position="-2.25 1.5 4" width="3.5" height="3" depth="0.3"
-           material="color: #8B4513; roughness: 0.7"></a-box>
-    <a-box position="2.25 1.5 4" width="3.5" height="3" depth="0.3"
-           material="color: #8B4513; roughness: 0.7"></a-box>
-    <a-box position="-4 1.5 0" width="0.3" height="3" depth="8"
-           material="color: #8B4513; roughness: 0.7"></a-box>
-    <a-box position="4 1.5 0" width="0.3" height="3" depth="8"
-           material="color: #8B4513; roughness: 0.7"></a-box>
-
-    <!-- Door -->
-    <a-box id="door" position="0 1.5 4" width="1.5" height="2.5" depth="0.3"
-           material="color: #4A4A4A; roughness: 0.3"
-           class="door"></a-box>
-    <a-text position="0 2.2 3.8" value="LOCKED" align="center"
-            color="red" scale="0.5 0.5 0.5"></a-text>
-
-    <!-- Escape Room Objects -->
-    <a-cylinder id="key" position="-3 1.8 -3.5" radius="0.05" height="0.3"
-                material="color: gold" class="key"
-                visible="false"></a-cylinder>
-
-    <a-box id="painting" position="-3 1.8 -3.7" width="1.2" height="1"
-           depth="0.1"
-           material="color: #8B008B; roughness: 0.3" class="painting"></a-box>
-    <a-text position="-3 1.8 -3.65" value="🎨" align="center"
-            color="white" scale="2.5 2.5 2.5"></a-text>
-
-    <a-box id="puzzlebox" position="2 1 2" width="0.8" height="0.5" depth="0.8"
-           material="color: #CD853F" class="puzzlebox"></a-box>
-    <a-text position="2 1.4 2" value="🔒" align="center"
-            color="black" scale="1.5 1.5 1.5"></a-text>
-
-    <a-box id="safe" position="3 0.75 -2" width="1" height="1.5" depth="0.8"
-           material="color: #2F4F4F" class="safe"></a-box>
-    <a-text position="3 1.8 -2" value="SAFE\n[0000]" align="center"
-            color="white" scale="0.4 0.4 0.4"></a-text>
-
-    <a-cylinder id="exitkey" position="3 1.2 -1" radius="0.08" height="0.3"
-                material="color: silver; metalness: 0.8; roughness: 0.2"
-                class="exitkey" visible="false"></a-cylinder>
-
-    <!-- Models -->
-    <a-gltf-model id="decorative-cat" src="#cat-model"
-                  position="-2 1.0 1" scale="0.3 0.3 0.3"
-                  animation="property: rotation; to: 0 360 0; dur: 12000; loop: true"></a-gltf-model>
-
-    <a-gltf-model id="floor-lamp" src="#lamp-model"
-                  position="1.5 1 -1.5" scale="1 1 1"></a-gltf-model>
-
-    <!-- Hints -->
-    <a-text position="-2 2 -3.9" value="Find the hidden key..."
-            align="center" color="white" scale="0.3 0.3 0.3"></a-text>
-    <a-text position="2 0.5 2" value="This box needs a key"
-            align="center" color="white" scale="0.2 0.2 0.2"></a-text>
-    <a-text position="-2 0.6 1" value="Cute Cat"
-            align="center" color="pink" scale="0.2 0.2 0.2"></a-text>
-
-
-    <!-- Player Rig -->
-    <a-entity id="rig"
-              position="0 1.6 2"
-              movement-controls="controls: keyboard"
-              simple-collision>
-        <a-entity camera look-controls>
-            <a-cursor position="0 0 -1"
-                      geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
-                      material="color: white; shader: flat"
-                      raycaster="objects: .painting, .key, .puzzlebox, .safe, .door, .exitkey; showLine: true"></a-cursor>
-        </a-entity>
-
-        <a-entity id="leftHand"
-                  hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
-        <a-entity id="rightHand"
-                  hand-controls="hand: right; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
-    </a-entity>
-
-
-    <!-- UI Text -->
-    <a-text id="message" position="0 2.8 -1"
-            value="Welcome to the VR Escape Room!\nFind clues to escape!"
-            align="center" color="cyan" scale="0.5 0.5 0.5"></a-text>
-    <a-text id="inventory" position="-3.5 2.5 -1"
-            value="Inventory:" align="left" color="yellow"
-            scale="0.3 0.3 0.3"></a-text>
-</a-scene>
+    <h1>VR Escape Room</h1>
+    <p>Redirecting to the VR experience...</p>
+    <p><a href="src/entrance.html">Click here if you're not redirected automatically</a></p>
 </body>
 </html>
