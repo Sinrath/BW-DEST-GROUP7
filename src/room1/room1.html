@@ -115,7 +115,7 @@
     </a-entity>
 
     <!-- Saw Tool -->
-    <a-entity gltf-model="#saw" position="0 0 3" rotation="90 0 180" scale="0.002 0.002 0.002">
+    <a-entity gltf-model="#saw" position="0 0 0" rotation="90 0 180" scale="0.002 0.002 0.002">
     </a-entity>
 
     <a-entity id="rig" position="0 1.6 5" movement-controls="controls: keyboard" simple-collision>
@@ -123,10 +123,16 @@
         <a-cursor position="0 0 -1" geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
           material="color: white; shader: flat" raycaster="objects: .door; showLine: true"></a-cursor>
       </a-entity>
+    </a-entity>
 
-      <!-- UI Text -->
-      <a-text id="message" position="0 2.8 2" value="Room Navigation" align="center" color="black" scale="0.5 0.5 0.5"
-        look-at="#playerCam"></a-text>
+    <!-- UI Text -->
+    <!--<a-text id="message" position="0 2.8 2" value="Room Navigation" align="center" color="black" scale="0.5 0.5 0.5"
+        look-at="#playerCam"></a-text>-->
+
+    <!-- UI Text -->
+    <a-text id="message" position="0 2 0"
+      value="Willkommen zum Materialraum!\n\nOrdne die von Openly verwendeten Baumaterialien entsprechend ihrer Nachhaltigkeit auf dem Tisch an.\n\nHinweise dazu findest du in den Waenden."
+      align="center" color="cyan" scale="0.5 0.5 0.5" look-at="#playerCam"></a-text>
   </a-scene>
 </body>
 
