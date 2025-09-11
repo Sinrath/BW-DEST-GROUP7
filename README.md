@@ -66,23 +66,10 @@ git tag room1-v1.1-prototype
 # Continue iterating...
 git commit -m "Add sound effects and polish"
 git tag room1-v2.0-prototype
+
+# Push room branch and tags
+git push origin room1-puzzles --tags
 ```
-
-#### 3. Integrating Completed Rooms
-```bash
-# Switch to main branch
-git checkout main
-
-# Merge completed room
-git merge room1-puzzles
-
-# Tag the integrated version
-git tag v1.0-prototype "Complete game with Room 1"
-
-# Push everything
-git push origin main --tags
-```
-
 ### Useful Commands
 
 #### Compare Prototype Versions
