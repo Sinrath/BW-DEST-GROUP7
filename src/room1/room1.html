@@ -22,6 +22,9 @@
 
     <!-- Assets -->
     <a-assets>
+        <a-asset-item id="woodModel" src="../../models/wood.glb"></a-asset-item>
+        <a-asset-item id="concreteModel" src="../../models/concrete_material.glb"></a-asset-item>
+        <a-asset-item id="scannerModel" src="../../models/sci-fi_scanner.glb"></a-asset-item>
     </a-assets>
 
     <!-- Lighting -->
@@ -75,6 +78,31 @@
             color="white" scale="0.4 0.4 0.4"></a-text>
 
 
+    <!-- Material Samples in center of room -->
+    <a-gltf-model id="wood-sample" src="#woodModel"
+                  position="-1.5 0.2 0"
+                  scale="0.08 0.08 0.08"
+                  rotation="0 0 0"
+                  class="material scannable"
+                  data-material="wood"
+                  data-info="Wood Sample: Organic material, density 0.6 g/cm³, flammable"></a-gltf-model>
+
+    <a-gltf-model id="concrete-sample" src="#concreteModel"
+                  position="1.5 0.5 0"
+                  scale="0.4 0.4 0.4"
+                  rotation="0 0 0"
+                  class="material scannable"
+                  data-material="concrete"
+                  data-info="Concrete Sample: Composite material, density 2.4 g/cm³, fire resistant"></a-gltf-model>
+
+    <!-- Scanner on ground -->
+    <a-gltf-model id="scanner" src="#scannerModel"
+                  position="0 1 -2"
+                  scale="0.1 0.1 0.1"
+                  rotation="0 0 0"
+                  class="pickupable scanner"
+                  data-item="scanner"></a-gltf-model>
+
     <!-- Room Title -->
     <a-text position="0 2.5 -7" value="ROOM 1" align="center"
             color="black" scale="1.2 1.2 1.2"></a-text>
@@ -94,13 +122,24 @@
             <a-cursor position="0 0 -1"
                       geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
                       material="color: white; shader: flat"
-                      raycaster="objects: .door; showLine: true"></a-cursor>
+                      raycaster="objects: .door, .pickupable, .scannable; showLine: true; recursive: true"></a-cursor>
         </a-entity>
 
     <!-- UI Text -->
     <a-text id="message" position="0 2.8 2"
-            value="Room Navigation"
+            value="Find the scanner and analyze the materials"
             align="center" color="black" scale="0.5 0.5 0.5" look-at="#playerCam"></a-text>
+
+    <!-- Scan Info Tooltip (bottom right, screen-fixed) -->
+    <a-entity id="scan-tooltip" position="0 0 0" visible="false">
+        <a-plane position="1.5 -0.8 -1.5" width="1.8" height="0.7"
+                 material="color: #000000; opacity: 0.8"
+                 look-at="#playerCam"></a-plane>
+        <a-text id="scan-info" position="1.5 -0.8 -1.4"
+                value=""
+                align="center" color="#00FF00" scale="0.3 0.3 0.3"
+                look-at="#playerCam"></a-text>
+    </a-entity>
 </a-scene>
 </body>
 </html>
