@@ -24,6 +24,7 @@
     <!-- Assets -->
     <a-assets>
       <a-asset-item id="table" src="../../models/office_table.glb"></a-asset-item>
+      <a-asset-item id="saw" src="../../models/saw_tool.glb"></a-asset-item>
     </a-assets>
 
     <!-- Lighting -->
@@ -74,7 +75,7 @@
     </a-entity>
 
     <!-- Building material -->
-    <a-entity position="-6 0.25 0">
+    <a-entity position="-7 0.25 4" rotation="0 90 0">
       <a-entity position="0 0 0">
         <a-box depth="0.5" height="0.5" width="0.5" color="#A0522D" value="Hanfbeton"></a-box>
         <a-text value="Hanfbeton" position="0 0.6 0" align="center" color="black"></a-text>
@@ -111,6 +112,10 @@
 
     <!-- Table -->
     <a-entity gltf-model="#table" position="6 1 -1" rotation="0 90 0" scale="0.06 0.02 0.02">
+    </a-entity>
+
+    <!-- Saw Tool -->
+    <a-entity gltf-model="#saw" position="0 0 3" rotation="90 0 180" scale="0.002 0.002 0.002">
     </a-entity>
 
     <a-entity id="rig" position="0 1.6 5" movement-controls="controls: keyboard" simple-collision>
