@@ -23,6 +23,7 @@
 
     <!-- Assets -->
     <a-assets>
+        <a-asset-item id="woodModel" src="../../models/wood.glb"></a-asset-item>
     </a-assets>
 
     <!-- Lighting -->
@@ -71,6 +72,12 @@
     <a-text position="0 2.5 -7" value="ROOM 3" align="center"
             color="black" scale="1.2 1.2 1.2"></a-text>
 
+    <!-- Wood Model in center of room -->
+    <a-gltf-model id="wood-sample" src="#woodModel"
+                  position="0 0 0"
+                  scale="0.1 0.1 0.1"
+                  rotation="0 0 0"></a-gltf-model>
+
 
         <a-entity id="leftHand"
                   hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
@@ -86,12 +93,12 @@
             <a-cursor position="0 0 -1"
                       geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
                       material="color: white; shader: flat"
-                      raycaster="objects: .door; showLine: true"></a-cursor>
+                      raycaster="objects: .door, .pickupable; showLine: true"></a-cursor>
         </a-entity>
 
     <!-- UI Text -->
     <a-text id="message" position="0 2.8 2"
-            value="Room Navigation"
+            value="Click on the wood to pick it up! Press Q to drop it."
             align="center" color="black" scale="0.5 0.5 0.5" look-at="#playerCam"></a-text>
 </a-scene>
 </body>
