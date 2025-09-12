@@ -13,6 +13,7 @@
     <script src="../../aframe-extras/dist/aframe-extras.js"></script>
     <script src="https://unpkg.com/aframe-look-at-component@1.0.0/dist/aframe-look-at-component.min.js"></script>
 
+    <script src="../shared/movement.js"></script>
     <script src="room3.js"></script>
 
 </head>
@@ -79,7 +80,7 @@
 
     <a-entity id="rig"
               position="0 1.6 5"
-              movement-controls="controls: keyboard"
+              movement-controls="controls: keyboard, touch"
               simple-collision>
         <a-entity id="playerCam" camera look-controls>
             <a-cursor position="0 0 -1"

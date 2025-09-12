@@ -13,6 +13,7 @@
     <script src="../aframe-extras/dist/aframe-extras.js"></script>
     <script src="https://unpkg.com/aframe-look-at-component@1.0.0/dist/aframe-look-at-component.min.js"></script>
 
+    <script src="shared/movement.js"></script>
     <script src="entrance.js"></script>
 
 </head>
@@ -118,8 +119,8 @@
     <!-- Player Rig -->
     <a-entity id="rig"
               position="0 1.6 2"
-              movement-controls="controls: keyboard"
-              simple-collision>
+              movement-controls="controls: keyboard, touch"
+              entrance-collision>
         <a-entity id="playerCam" camera look-controls>
             <a-cursor position="0 0 -1"
                       geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"

@@ -1,7 +1,7 @@
-// Entrance area navigation
+// Entrance area - Custom collision for 8x8 area
 
-// Collision system for 8x8 entrance
-AFRAME.registerComponent('simple-collision', {
+// Override collision system for smaller entrance area
+AFRAME.registerComponent('entrance-collision', {
     init: function () {
         this.maxDistance = 3.5; // Stay within 8x8 area (±3.5 from center)
         this.previousPosition = new THREE.Vector3();
@@ -38,11 +38,6 @@ AFRAME.registerComponent('simple-collision', {
         }
     }
 });
-
-// Room navigation system
-function navigateToRoom(roomUrl) {
-    window.location.href = roomUrl;
-}
 
 // Initialize entrance navigation
 AFRAME.registerComponent('entrance-navigation', {
