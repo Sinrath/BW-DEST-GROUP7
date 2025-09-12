@@ -23,6 +23,8 @@
 
     <!-- Assets -->
     <a-assets>
+        <a-asset-item id="maleAvatar" src="../models/male_avatar.glb"></a-asset-item>
+        <a-asset-item id="doorModel" src="../models/door_with_frame.glb"></a-asset-item>
     </a-assets>
 
     <!-- Lighting -->
@@ -48,12 +50,65 @@
     <a-box position="4 1.5 0" width="0.3" height="3" depth="8"
            material="color: #d0d0d0; roughness: 0.4"></a-box>
 
-    <!-- Door to Room 1 -->
-    <a-box id="door-room1" position="0 1.5 3.5" width="2" height="2.8" depth="0.2"
-           material="color: #666666; roughness: 0.3"
-           class="door" data-target="./room1/room1.html"></a-box>
-    <a-text position="0 2.8 3.2" rotation="0 180 0" value="ROOM 1" align="center"
-            color="red" scale="1.0 1.0 1.0"></a-text>
+    <!-- Male Avatar Guide -->
+    <a-gltf-model id="guide-avatar" src="#maleAvatar"
+                  position="-2 0 -1"
+                  scale="1 1 1"
+                  rotation="0 45 0"
+                  animation="property: rotation; to: 0 75 0; dur: 3000; dir: alternate; loop: true"
+                  animation-mixer="clip: *; loop: once; clampWhenFinished: true"></a-gltf-model>
+
+    <!-- Welcome Speech Bubble -->
+    <a-plane id="speech-bubble" position="-2 1.8 -1"
+             width="3" height="2"
+             material="color: #ffffff; opacity: 0.9"
+             rotation="0 45 0"
+             visible="true">
+        <a-text position="0 0.5 0.01"
+                value="Welcome to VR Escape Room!"
+                align="center"
+                color="#333333"
+                scale="0.8 0.8 0.8"></a-text>
+        <a-text position="0 0.1 0.01"
+                value="Use WASD keys or VR controllers to move"
+                align="center"
+                color="#666666"
+                scale="0.5 0.5 0.5"></a-text>
+        <a-text position="0 -0.2 0.01"
+                value="Look around with mouse or head movement"
+                align="center"
+                color="#666666"
+                scale="0.5 0.5 0.5"></a-text>
+        <a-text position="0 -0.5 0.01"
+                value="Solve puzzles to escape each room!"
+                align="center"
+                color="#666666"
+                scale="0.5 0.5 0.5"></a-text>
+    </a-plane>
+
+    <!-- START Button -->
+    <a-box id="start-button" position="0 1 1"
+           width="1.5" height="0.8" depth="0.2"
+           material="color: #00AA00; roughness: 0.3"
+           class="clickable start-btn"
+           animation__mouseenter="startEvents: mouseenter; property: material.color; to: #00FF00; dur: 200"
+           animation__mouseleave="startEvents: mouseleave; property: material.color; to: #00AA00; dur: 200">
+        <a-text position="0 0 0.11"
+                value="START GAME"
+                align="center"
+                color="white"
+                scale="0.7 0.7 0.7"></a-text>
+    </a-box>
+
+    <!-- Door to Room 1 (initially hidden and non-clickable) -->
+    <a-gltf-model id="door-room1" src="#doorModel"
+                  position="0 0 -3.8"
+                  scale="0.013 0.013 0.013"
+                  rotation="0 0 0"
+                  data-target="./room1/room1.html"
+                  visible="false"></a-gltf-model>
+    <a-text id="room1-label" position="0 2.8 -3.6" rotation="0 0 0" value="ROOM 1" align="center"
+            color="red" scale="1.0 1.0 1.0" visible="false"></a-text>
 
     <!-- Room Title -->
     <a-text position="0 2.5 -3" value="ENTRANCE" align="center"
@@ -69,7 +124,7 @@
             <a-cursor position="0 0 -1"
                       geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
                       material="color: white; shader: flat"
-                      raycaster="objects: .door; showLine: true"></a-cursor>
+                      raycaster="objects: .door, .clickable; showLine: true"></a-cursor>
         </a-entity>
 
         <a-entity id="leftHand"
@@ -79,10 +134,11 @@
     </a-entity>
 
 
-    <!-- UI Text -->
+    <!-- UI Text (initially hidden) -->
     <a-text id="message" position="0 2.8 2"
-            value="Welcome to the Multi-Room Escape!\nUse the door to navigate."
-            align="center" color="cyan" scale="0.5 0.5 0.5" look-at="#playerCam"></a-text>
+            value="Great! Now you can enter Room 1.\nGood luck with your escape!"
+            align="center" color="cyan" scale="0.5 0.5 0.5" look-at="#playerCam"
+            visible="false"></a-text>
 </a-scene>
 </body>
 </html>
