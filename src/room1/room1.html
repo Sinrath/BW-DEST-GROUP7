@@ -23,8 +23,6 @@
 
     <!-- Assets -->
     <a-assets>
-      <a-asset-item id="table" src="../../models/office_table.glb"></a-asset-item>
-      <a-asset-item id="saw" src="../../models/saw_tool.glb"></a-asset-item>
     </a-assets>
 
     <!-- Lighting -->
@@ -72,51 +70,6 @@
 
     <a-entity id="leftHand" hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
     <a-entity id="rightHand" hand-controls="hand: right; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
-    </a-entity>
-
-    <!-- Building material -->
-    <a-entity position="-7 0.25 4" rotation="0 90 0">
-      <a-entity position="0 0 0">
-        <a-box depth="0.5" height="0.5" width="0.5" color="#A0522D" value="Hanfbeton"></a-box>
-        <a-text value="Hanfbeton" position="0 0.6 0" align="center" color="black"></a-text>
-      </a-entity>
-      <a-entity position="1 0 0">
-        <a-box depth="0.5" height="0.5" width="0.5" color="#CD853F"></a-box>
-        <a-text value="Hanfziegel" position="0 0.6 0" align="center" color="black"></a-text>
-      </a-entity>
-      <a-entity position="2 0 0">
-        <a-box depth="0.5" height="0.5" width="0.5" color="#8B4513"></a-box>
-        <a-text value="Holz" position="0 0.6 0" align="center" color="black"></a-text>
-      </a-entity>
-      <a-entity position="3 0 0">
-        <a-box depth="0.5" height="0.5" width="0.5" color="#DEB887"></a-box>
-        <a-text value="Kork" position="0 0.6 0" align="center" color="black"></a-text>
-      </a-entity>
-      <a-entity position="4 0 0">
-        <a-box depth="0.5" height="0.5" width="0.5" color="#696969"></a-box>
-        <a-text value="Pflanzenkohle Beton" position="0 0.6 0" align="center" color="black" width="2"></a-text>
-      </a-entity>
-      <a-entity position="5 0 0">
-        <a-box depth="0.5" height="0.5" width="0.5" color="#B87333"></a-box>
-        <a-text value="Kupfer" position="0 0.6 0" align="center" color="black"></a-text>
-      </a-entity>
-      <a-entity position="6 0 0">
-        <a-box depth="0.5" height="0.5" width="0.5" color="#A0522D"></a-box>
-        <a-text value="Lehm" position="0 0.6 0" align="center" color="black"></a-text>
-      </a-entity>
-      <a-entity position="7 0 0">
-        <a-box depth="0.5" height="0.5" width="0.5" color="#EEE8AA"></a-box>
-        <a-text value="Sumpfkalk" position="0 0.6 0" align="center" color="black"></a-text>
-      </a-entity>
-    </a-entity>
-
-    <!-- Table -->
-    <a-entity gltf-model="#table" position="6 1 -1" rotation="0 90 0" scale="0.06 0.02 0.02">
-    </a-entity>
-
-    <!-- Saw Tool -->
-    <a-entity gltf-model="#saw" position="0 0 0" rotation="90 0 180" scale="0.002 0.002 0.002">
-    </a-entity>
 
     <a-entity id="rig" position="0 1.6 5" movement-controls="controls: keyboard" simple-collision>
       <a-entity id="playerCam" camera look-controls>
@@ -126,13 +79,8 @@
     </a-entity>
 
     <!-- UI Text -->
-    <!--<a-text id="message" position="0 2.8 2" value="Room Navigation" align="center" color="black" scale="0.5 0.5 0.5"
-        look-at="#playerCam"></a-text>-->
-
-    <!-- UI Text -->
-    <a-text id="message" position="0 2 0"
-      value="Willkommen zum Materialraum!\n\nOrdne die von Openly verwendeten Baumaterialien entsprechend ihrer Nachhaltigkeit auf dem Tisch an.\n\nHinweise dazu findest du in den Waenden."
-      align="center" color="cyan" scale="0.5 0.5 0.5" look-at="#playerCam"></a-text>
+    <a-text id="message" position="0 2.8 2" value="Room Navigation" align="center" color="black" scale="0.5 0.5 0.5"
+        look-at="#playerCam"></a-text>
   </a-scene>
 </body>
 

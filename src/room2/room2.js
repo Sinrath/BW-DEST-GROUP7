@@ -1,4 +1,4 @@
-// Room 2 navigation
+// Room 2 - Material Room with puzzle functionality
 
 // Collision system for 16x16 room
 AFRAME.registerComponent('simple-collision', {
@@ -69,6 +69,13 @@ AFRAME.registerComponent('room-navigation', {
         doors.forEach(door => {
             door.addEventListener('click', handleDoorClick);
         });
+
+        // Add click listeners to building materials
+        const materials = document.querySelectorAll('a-box[color]');
+        materials.forEach(material => {
+            material.addEventListener('click', handleMaterialClick);
+            material.classList.add('material');
+        });
     }
 });
 
@@ -86,6 +93,31 @@ function handleDoorClick(event) {
         setTimeout(() => {
             navigateToRoom(targetRoom);
         }, 300);
+    }
+}
+
+// Handle material interactions
+function handleMaterialClick(event) {
+    const material = event.target;
+    const materialText = material.parentElement.querySelector('a-text');
+    
+    if (materialText) {
+        const materialName = materialText.getAttribute('value');
+        console.log('Material clicked:', materialName);
+        
+        // Visual feedback - make material glow briefly
+        material.setAttribute('animation', 'property: material.emissive; to: #ffffff; dur: 300; dir: alternate');
+        
+        // Update message
+        const message = document.querySelector('#message');
+        if (message) {
+            message.setAttribute('value', `Material selected: ${materialName}\n\nArrange materials by sustainability on the table.`);
+            
+            // Reset message after 3 seconds
+            setTimeout(() => {
+                message.setAttribute('value', 'Willkommen zum Materialraum!\n\nOrdne die von Openly verwendeten Baumaterialien entsprechend ihrer Nachhaltigkeit auf dem Tisch an.\n\nHinweise dazu findest du in den Waenden.');
+            }, 3000);
+        }
     }
 }
 

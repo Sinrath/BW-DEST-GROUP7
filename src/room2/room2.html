@@ -22,14 +22,21 @@
 
     <!-- Assets -->
     <a-assets>
+        <a-asset-item id="table"
+                      src="../../models/office_table.glb"></a-asset-item>
+        <a-asset-item id="saw" src="../../models/saw_tool.glb"></a-asset-item>
     </a-assets>
 
     <!-- Lighting -->
     <a-light type="ambient" color="#ffffff" intensity="0.9"></a-light>
-    <a-light type="directional" position="2 4 2" color="#ffffff" intensity="1.3"></a-light>
-    <a-light type="point" position="0 3 0" color="#ffffff" intensity="1.5" distance="20"></a-light>
-    <a-light type="point" position="5 2 5" color="#ffffff" intensity="0.8" distance="15"></a-light>
-    <a-light type="point" position="-5 2 -5" color="#ffffff" intensity="0.8" distance="15"></a-light>
+    <a-light type="directional" position="2 4 2" color="#ffffff"
+             intensity="1.3"></a-light>
+    <a-light type="point" position="0 3 0" color="#ffffff" intensity="1.5"
+             distance="20"></a-light>
+    <a-light type="point" position="5 2 5" color="#ffffff" intensity="0.8"
+             distance="15"></a-light>
+    <a-light type="point" position="-5 2 -5" color="#ffffff" intensity="0.8"
+             distance="15"></a-light>
     <!-- Room 2 Structure (16x16) -->
     <a-box position="0 -0.05 0" width="16" height="0.1" depth="16"
            material="color: #e0e0e0; roughness: 0.3"></a-box>
@@ -49,21 +56,27 @@
            material="color: #d0d0d0; roughness: 0.4"></a-box>
 
     <!-- Door back to Room 1 -->
-    <a-box id="door-room1" position="-2 1.5 8" width="1.5" height="2.5" depth="0.3"
+    <a-box id="door-room1" position="-2 1.5 8" width="1.5" height="2.5"
+           depth="0.3"
            material="color: #4A4A4A; roughness: 0.3"
            class="door" data-target="../room1/room1.html"></a-box>
-    <a-text position="-2 2.8 7.8" rotation="0 180 0" value="← ROOM 1" align="center"
+    <a-text position="-2 2.8 7.8" rotation="0 180 0" value="← ROOM 1"
+            align="center"
             color="red" scale="0.8 0.8 0.8"></a-text>
-    <a-text position="-2 2.3 7.8" rotation="0 180 0" value="(Back)" align="center"
+    <a-text position="-2 2.3 7.8" rotation="0 180 0" value="(Back)"
+            align="center"
             color="white" scale="0.4 0.4 0.4"></a-text>
 
     <!-- Door to Room 3 -->
-    <a-box id="door-room3" position="2 1.5 8" width="1.5" height="2.5" depth="0.3"
+    <a-box id="door-room3" position="2 1.5 8" width="1.5" height="2.5"
+           depth="0.3"
            material="color: #4A4A4A; roughness: 0.3"
            class="door" data-target="../room3/room3.html"></a-box>
-    <a-text position="2 2.8 7.8" rotation="0 180 0" value="ROOM 3 →" align="center"
+    <a-text position="2 2.8 7.8" rotation="0 180 0" value="ROOM 3 →"
+            align="center"
             color="red" scale="0.8 0.8 0.8"></a-text>
-    <a-text position="2 2.3 7.8" rotation="0 180 0" value="(Next)" align="center"
+    <a-text position="2 2.3 7.8" rotation="0 180 0" value="(Next)"
+            align="center"
             color="white" scale="0.4 0.4 0.4"></a-text>
 
     <!-- Room Title -->
@@ -71,10 +84,71 @@
             color="black" scale="1.2 1.2 1.2"></a-text>
 
 
-        <a-entity id="leftHand"
-                  hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
-        <a-entity id="rightHand"
-                  hand-controls="hand: right; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
+    <a-entity id="leftHand"
+              hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
+    <a-entity id="rightHand"
+              hand-controls="hand: right; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
+
+    <!-- Building material -->
+    <a-entity position="-7 0.25 4" rotation="0 90 0">
+        <a-entity position="0 0 0">
+            <a-box depth="0.5" height="0.5" width="0.5" color="#A0522D"
+                   value="Hanfbeton"></a-box>
+            <a-text value="Hanfbeton" position="0 0.6 0" align="center"
+                    color="black"></a-text>
+        </a-entity>
+        <a-entity position="1 0 0">
+            <a-box depth="0.5" height="0.5" width="0.5"
+                   color="#CD853F"></a-box>
+            <a-text value="Hanfziegel" position="0 0.6 0" align="center"
+                    color="black"></a-text>
+        </a-entity>
+        <a-entity position="2 0 0">
+            <a-box depth="0.5" height="0.5" width="0.5"
+                   color="#8B4513"></a-box>
+            <a-text value="Holz" position="0 0.6 0" align="center"
+                    color="black"></a-text>
+        </a-entity>
+        <a-entity position="3 0 0">
+            <a-box depth="0.5" height="0.5" width="0.5"
+                   color="#DEB887"></a-box>
+            <a-text value="Kork" position="0 0.6 0" align="center"
+                    color="black"></a-text>
+        </a-entity>
+        <a-entity position="4 0 0">
+            <a-box depth="0.5" height="0.5" width="0.5"
+                   color="#696969"></a-box>
+            <a-text value="Pflanzenkohle Beton" position="0 0.6 0"
+                    align="center" color="black" width="2"></a-text>
+        </a-entity>
+        <a-entity position="5 0 0">
+            <a-box depth="0.5" height="0.5" width="0.5"
+                   color="#B87333"></a-box>
+            <a-text value="Kupfer" position="0 0.6 0" align="center"
+                    color="black"></a-text>
+        </a-entity>
+        <a-entity position="6 0 0">
+            <a-box depth="0.5" height="0.5" width="0.5"
+                   color="#A0522D"></a-box>
+            <a-text value="Lehm" position="0 0.6 0" align="center"
+                    color="black"></a-text>
+        </a-entity>
+        <a-entity position="7 0 0">
+            <a-box depth="0.5" height="0.5" width="0.5"
+                   color="#EEE8AA"></a-box>
+            <a-text value="Sumpfkalk" position="0 0.6 0" align="center"
+                    color="black"></a-text>
+        </a-entity>
+    </a-entity>
+
+    <!-- Table -->
+    <a-entity gltf-model="#table" position="6 1 -1" rotation="0 90 0"
+              scale="0.06 0.02 0.02">
+    </a-entity>
+
+    <!-- Saw Tool -->
+    <a-entity gltf-model="#saw" position="0 0 0" rotation="90 0 180"
+              scale="0.002 0.002 0.002">
     </a-entity>
 
     <a-entity id="rig"
@@ -85,13 +159,15 @@
             <a-cursor position="0 0 -1"
                       geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
                       material="color: white; shader: flat"
-                      raycaster="objects: .door; showLine: true"></a-cursor>
+                      raycaster="objects: .door, .material; showLine: true"></a-cursor>
         </a-entity>
+    </a-entity>
 
     <!-- UI Text -->
     <a-text id="message" position="0 2.8 2"
-            value="Room Navigation"
-            align="center" color="black" scale="0.5 0.5 0.5" look-at="#playerCam"></a-text>
-</a-scene>
+            value="Willkommen zum Materialraum!\n\nOrdne die von Openly verwendeten Baumaterialien entsprechend ihrer Nachhaltigkeit auf dem Tisch an.\n\nHinweise dazu findest du in den Waenden."
+            align="center" color="cyan" scale="0.5 0.5 0.5"
+            look-at="#playerCam"></a-text>
+    </a-scene>
 </body>
 </html>
