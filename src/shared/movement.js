@@ -1,9 +1,13 @@
 // Shared movement and collision system for all rooms
 
-// Collision system for 16x16 room
+// Configurable collision system
 AFRAME.registerComponent('simple-collision', {
+    schema: {
+        maxDistance: {type: 'number', default: 7.5} // Configurable bounds
+    },
+
     init: function () {
-        this.maxDistance = 7.5; // Stay within 16x16 area (±7.5 from center)
+        this.maxDistance = this.data.maxDistance;
         this.previousPosition = new THREE.Vector3();
         this.el.addEventListener('componentchanged', this.checkBounds.bind(this));
     },

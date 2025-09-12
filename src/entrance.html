@@ -120,7 +120,7 @@
     <a-entity id="rig"
               position="0 1.6 2"
               movement-controls="controls: keyboard, touch"
-              entrance-collision>
+              simple-collision="maxDistance: 3.5">
         <a-entity id="playerCam" camera look-controls>
             <a-cursor position="0 0 -1"
                       geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
