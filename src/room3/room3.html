@@ -23,7 +23,8 @@
 
     <!-- Assets -->
     <a-assets>
-        <a-asset-item id="woodModel" src="../../models/wood.glb"></a-asset-item>
+        <a-asset-item id="woodBlockModel" src="../../models/wood_block.glb"></a-asset-item>
+        <a-asset-item id="table" src="../../models/office_table.glb"></a-asset-item>
     </a-assets>
 
     <!-- Lighting -->
@@ -72,18 +73,55 @@
     <a-text position="0 2.5 -7" value="ROOM 3" align="center"
             color="black" scale="1.2 1.2 1.2"></a-text>
 
-    <!-- Wood Model in center of room -->
-    <a-gltf-model id="wood-sample" src="#woodModel"
-                  position="0 0 0"
-                  scale="0.1 0.1 0.1"
-                  rotation="0 0 0"></a-gltf-model>
-
-
-        <a-entity id="leftHand"
-                  hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
-        <a-entity id="rightHand"
-                  hand-controls="hand: right; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
+    <!-- Table -->
+    <a-entity gltf-model="#table" position="0 1 0" rotation="0 0 0"
+              scale="0.06 0.02 0.02">
     </a-entity>
+
+    <!-- Sorting spots on table (gray until both materials placed) -->
+    <a-cylinder id="spot1" position="-0.8 1.05 1" radius="0.4" height="0.05"
+                material="color: gray; opacity: 0.6"
+                class="sorting-spot"
+                data-correct-material="hanfbeton"></a-cylinder>
+    <a-cylinder id="spot2" position="0.8 1.05 1" radius="0.4" height="0.05"
+                material="color: gray; opacity: 0.6"
+                class="sorting-spot"
+                data-correct-material="holz"></a-cylinder>
+
+    <!-- Labels for spots -->
+    <a-text position="-0.8 1.3 1" value="Most Sustainable" align="center"
+            color="black" scale="0.4 0.4 0.4"></a-text>
+    <a-text position="0.8 1.3 1" value="Less Sustainable" align="center"
+            color="black" scale="0.4 0.4 0.4"></a-text>
+
+    <!-- Wood Block Model moved to side -->
+    <a-gltf-model id="wood-sample" src="#woodBlockModel"
+                  position="-5 0.25 -3"
+                  scale="0.05 0.05 0.05"
+                  rotation="0 0 0"
+                  class="material pickupable"
+                  data-material="wood"></a-gltf-model>
+
+    <!-- Material 1: Hanfbeton (Hemp Concrete) - Most sustainable -->
+    <a-box id="material-hanfbeton" position="-3 0.25 3" width="0.5" height="0.5" depth="0.5"
+           material="color: #A0522D"
+           class="material pickupable"
+           data-material="hanfbeton"></a-box>
+    <a-text position="-3 0.8 3" value="Hanfbeton" align="center"
+            color="black" scale="0.4 0.4 0.4"></a-text>
+
+    <!-- Material 2: Holz (Wood) - Less sustainable -->
+    <a-box id="material-holz" position="3 0.25 3" width="0.5" height="0.5" depth="0.5"
+           material="color: #8B4513"
+           class="material pickupable"
+           data-material="holz"></a-box>
+    <a-text position="3 0.8 3" value="Holz" align="center"
+            color="black" scale="0.4 0.4 0.4"></a-text>
+
+    <a-entity id="leftHand"
+              hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
+    <a-entity id="rightHand"
+              hand-controls="hand: right; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
 
     <a-entity id="rig"
               position="0 1.6 5"
@@ -93,12 +131,12 @@
             <a-cursor position="0 0 -1"
                       geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
                       material="color: white; shader: flat"
-                      raycaster="objects: .door, .pickupable; showLine: true"></a-cursor>
+                      raycaster="objects: .door, .material, .sorting-spot, .placed-material; showLine: true"></a-cursor>
         </a-entity>
 
     <!-- UI Text -->
     <a-text id="message" position="0 2.8 2"
-            value="Click on the wood to pick it up! Press Q to drop it."
+            value="Sort materials by sustainability on the table! Click materials to pick up and drop on correct spots."
             align="center" color="black" scale="0.5 0.5 0.5" look-at="#playerCam"></a-text>
 </a-scene>
 </body>
