@@ -19,29 +19,15 @@
 
 </head>
 <body>
-<!-- 2D overlay (works on PC; becomes DOM Overlay in VR where supported) -->
-<div id="ui" style="position:fixed; inset:0; pointer-events:none; z-index:9999; display:block;">
-  <div id="ui-panel" style="
-      position:fixed; left:20px; bottom:20px; width:340px; pointer-events:auto;
-      background:rgba(0,0,0,.85); color:#fff; padding:12px; border-radius:12px; font:14px/1.3 system-ui;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index:10000;">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-      <strong>Room 5 Status</strong>
-      <button id="actionBtn" style="padding:4px 8px; background:#007acc; color:white; border:none; border-radius:4px; cursor:pointer;">Action (E)</button>
-    </div>
-    <div id="status">🏗️ Room 5: Ready for Development</div>
-    <div id="progress">📋 Prototype Planning Phase</div>
-    <div style="opacity:.8; font-size:12px;">Q = Drop | E = Action | I = Inventory</div>
-  </div>
-</div>
 
 <a-scene background="color: #f0f0f0"
-         vr-mode-ui="enabled: true"
-         webxr="optionalFeatures: dom-overlay, local-floor; overlayElement: #ui">
+         vr-mode-ui="enabled: true">
 
     <!-- Assets -->
     <a-assets>
-        <!-- Add your Room 5 specific assets here -->
+        <a-asset-item id="table" src="../../models/office_table.glb"></a-asset-item>
+        <a-asset-item id="keyModel" src="../../models/key.glb"></a-asset-item>
+        <a-asset-item id="lockedDoorModel" src="../../models/door_with_frame.glb"></a-asset-item>
     </a-assets>
 
     <!-- Lighting -->
@@ -88,26 +74,67 @@
             color="white" scale="0.4 0.4 0.4"></a-text>
 
     <!-- Room Title -->
-    <a-text position="0 2.5 -7" value="ROOM 5 - PROTOTYPE SPACE" align="center"
+    <a-text position="0 2.5 -7" value="ROOM 5" align="center"
             color="black" scale="1.2 1.2 1.2"></a-text>
 
-    <!-- Placeholder Content for Room 5 Development -->
-    <a-box position="0 1 0" width="2" height="2" depth="2"
-           material="color: #4CAF50; roughness: 0.3"
-           class="placeholder interactive"
-           data-info="Room 5 Prototype Area - Ready for your next innovative puzzle concept!"></a-box>
-    <a-text position="0 2.2 0" value="ROOM 5\nPROTOTYPE" align="center"
-            color="white" scale="0.8 0.8 0.8"></a-text>
+    <!-- Table -->
+    <a-entity gltf-model="#table" position="0 1 0" rotation="0 0 0"
+              scale="0.06 0.02 0.02">
+    </a-entity>
 
-    <!-- Development Notes (visible placeholder) -->
-    <a-plane position="-5 2 -3" width="3" height="2" material="color: #2196F3; opacity: 0.8">
-        <a-text position="0 0.5 0.01" value="ROOM 5 DEVELOPMENT" align="center"
-                color="white" scale="0.6 0.6 0.6"></a-text>
-        <a-text position="0 0 0.01" value="• New puzzle mechanics\n• Advanced interactions\n• Enhanced UI features" align="center"
-                color="white" scale="0.4 0.4 0.4"></a-text>
-        <a-text position="0 -0.5 0.01" value="Ready for innovation!" align="center"
-                color="yellow" scale="0.5 0.5 0.5"></a-text>
-    </a-plane>
+    <!-- Sorting spots on table (gray until both materials placed) -->
+    <a-cylinder id="spot1" position="-0.8 1.05 1" radius="0.4" height="0.05"
+                material="color: gray; opacity: 0.6"
+                class="sorting-spot"
+                data-correct-material="hanfbeton"></a-cylinder>
+    <a-cylinder id="spot2" position="0.8 1.05 1" radius="0.4" height="0.05"
+                material="color: gray; opacity: 0.6"
+                class="sorting-spot"
+                data-correct-material="holz"></a-cylinder>
+
+    <!-- Labels for spots -->
+    <a-text position="-0.8 1.3 1" value="Most Sustainable" align="center"
+            color="black" scale="0.4 0.4 0.4"></a-text>
+    <a-text position="0.8 1.3 1" value="Less Sustainable" align="center"
+            color="black" scale="0.4 0.4 0.4"></a-text>
+
+
+    <!-- Material 1: Hanfbeton (Hemp Concrete) - Most sustainable -->
+    <a-box id="material-hanfbeton" position="-3 0.25 3" width="0.5" height="0.5" depth="0.5"
+           material="color: #A0522D"
+           class="material pickupable"
+           data-material="hanfbeton"></a-box>
+    <a-text position="-3 0.8 3" value="Hanfbeton" align="center"
+            color="black" scale="0.4 0.4 0.4"></a-text>
+
+    <!-- Material 2: Holz (Wood) - Less sustainable -->
+    <a-box id="material-holz" position="3 0.25 3" width="0.5" height="0.5" depth="0.5"
+           material="color: #8B4513"
+           class="material pickupable"
+           data-material="holz"></a-box>
+    <a-text position="3 0.8 3" value="Holz" align="center"
+            color="black" scale="0.4 0.4 0.4"></a-text>
+
+    <!-- Locked Door (initially visible, but not interactive) -->
+    <a-gltf-model id="locked-door" src="#lockedDoorModel"
+                  position="0 0 -7.5"
+                  scale="0.02 0.02 0.02"
+                  rotation="0 0 0"
+                  autocenter-gltf="ground: true"></a-gltf-model>
+    <a-text position="0 2 -7" value="🔒 LOCKED DOOR" align="center"
+            color="red" scale="0.6 0.6 0.6"></a-text>
+    <a-text position="0 1.5 -7" value="Find the key!" align="center"
+            color="orange" scale="0.4 0.4 0.4"></a-text>
+
+    <!-- Key (hidden initially, drops when puzzle solved) -->
+    <a-gltf-model id="key" src="#keyModel"
+                  position="0 4 1"
+                  scale="0.001 0.001 0.001"
+                  rotation="0 0 0"
+                  class="key pickupable"
+                  data-item="key"
+                  visible="false"
+                  autocenter-gltf="ground: false"></a-gltf-model>
 
     <a-entity id="leftHand"
               hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
@@ -122,129 +149,13 @@
             <a-cursor position="0 0 -1"
                       geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
                       material="color: white; shader: flat"
-                      raycaster="objects: .door, .interactive; showLine: true"></a-cursor>
-
-        <!-- World-space HUD fallback (hidden unless DOM Overlay is unavailable) -->
-        <a-entity id="world-hud" position="-1.2 -0.8 -1.8" visible="false">
-            <a-plane width="2.2" height="0.8" material="color: #333333; opacity: 0.85" position="0 0 0">
-                <a-text value="ROOM 5 STATUS" position="0 0.2 0.01" align="center" color="white" scale="0.5 0.5 0.5"></a-text>
-                <a-text id="world-status" value="🏗️ Ready for Development" position="0 0 0.01" align="center" color="lime" scale="0.35 0.35 0.35"></a-text>
-                <a-text id="world-progress" value="📋 Prototype Planning" position="0 -0.15 0.01" align="center" color="cyan" scale="0.35 0.35 0.35"></a-text>
-                <a-text value="Q = Drop | E = Action" position="0 -0.3 0.01" align="center" color="yellow" scale="0.28 0.28 0.28"></a-text>
-            </a-plane>
-        </a-entity>
-
-        <!-- VR Inventory instruction (only visible in VR without DOM Overlay) -->
-        <a-text id="vr-inventory-hint" position="-2 -1.2 -1.8"
-                value="Press I for Interface" align="center"
-                color="#666666" scale="0.3 0.3 0.3" visible="false"></a-text>
+                      raycaster="objects: .door, .material, .key, .sorting-spot, .placed-material; showLine: true"></a-cursor>
         </a-entity>
 
     <!-- UI Text -->
     <a-text id="message" position="0 2.8 2"
-            value="Welcome to Room 5 - Prototype Development Space!\nThis room is ready for your next innovative puzzle concept."
+            value="Sort materials by sustainability on the table! Click materials to pick up and drop on correct spots."
             align="center" color="black" scale="0.5 0.5 0.5" look-at="#playerCam"></a-text>
 </a-scene>
-
-<script>
-(function () {
-    const overlay = document.getElementById('ui');
-    const scene = document.querySelector('a-scene');
-    let isInVRWithoutDOMOverlay = false;
-    let vrHudVisible = false;
-
-    function showOverlay2D() {
-        if (overlay) {
-            overlay.style.display = 'block';
-            console.log('2D overlay shown');
-        }
-    }
-    function hideOverlay2D() {
-        if (overlay) {
-            overlay.style.display = 'none';
-            console.log('2D overlay hidden');
-        }
-    }
-    function showWorldHud(v) {
-        const worldHud = document.getElementById('world-hud');
-        if (worldHud) {
-            worldHud.setAttribute('visible', !!v);
-            console.log('World HUD:', !!v ? 'shown' : 'hidden');
-        }
-    }
-    function toggleVRInventory() {
-        if (isInVRWithoutDOMOverlay) {
-            vrHudVisible = !vrHudVisible;
-            showWorldHud(vrHudVisible);
-            console.log('VR interface toggled:', vrHudVisible);
-        }
-    }
-    function showVRHint(show) {
-        const hint = document.getElementById('vr-inventory-hint');
-        if (hint) {
-            hint.setAttribute('visible', show);
-        }
-    }
-
-    // Initialize immediately for desktop
-    console.log('Initializing Room 5 UI...');
-    showOverlay2D();
-
-    // Also set up when scene loads
-    if (scene) {
-        scene.addEventListener('loaded', () => {
-            console.log('Scene loaded, ensuring 2D overlay is visible');
-            showOverlay2D();
-            showWorldHud(false);
-        });
-
-        // Entering VR: choose DOM Overlay if available, otherwise world HUD
-        scene.addEventListener('enter-vr', () => {
-            console.log('Entering VR mode');
-            const session = scene.renderer?.xr?.getSession?.();
-            const domOverlayActive = !!(session && session.domOverlayState);
-            console.log('DOM Overlay active:', domOverlayActive);
-
-            if (domOverlayActive) {
-                // Keep the 2D overlay (now rendered *inside* XR as a DOM Overlay)
-                showOverlay2D();
-                showWorldHud(false);
-                showVRHint(false);
-                isInVRWithoutDOMOverlay = false;
-            } else {
-                // DOM Overlay not supported → use toggleable world-space HUD
-                hideOverlay2D();
-                showWorldHud(false); // Start hidden, toggle with I key
-                showVRHint(true);    // Show "Press I for Interface" hint
-                isInVRWithoutDOMOverlay = true;
-                vrHudVisible = false;
-            }
-        });
-
-        // Back to flat screen
-        scene.addEventListener('exit-vr', () => {
-            console.log('Exiting VR mode');
-            showOverlay2D();
-            showWorldHud(false);
-            showVRHint(false);
-            isInVRWithoutDOMOverlay = false;
-        });
-    }
-
-    // Wire desktop button to game logic
-    document.getElementById('actionBtn')?.addEventListener('click', () => {
-        console.log('Action button clicked');
-        // Trigger same action function as 'E' key
-        document.dispatchEvent(new KeyboardEvent('keydown', {key: 'e'}));
-    });
-
-    // Add global keyboard listener for I key (VR interface toggle)
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'i' || event.key === 'I') {
-            toggleVRInventory();
-        }
-    });
-})();
-</script>
 </body>
 </html>
