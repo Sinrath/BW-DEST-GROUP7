@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>VR Escape Room - Room 4</title>
-    <meta name="description" content="VR Escape Room Room 4 - A-Frame">
+    <title>VR Escape Room - Room 5</title>
+    <meta name="description" content="VR Escape Room Room 5 - A-Frame">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
     <!-- A-Frame -->
@@ -15,7 +15,7 @@
 
     <script src="../shared/movement.js"></script>
     <script src="../shared/components.js"></script>
-    <script src="room4.js"></script>
+    <script src="room5.js"></script>
 
 </head>
 <body>
@@ -26,12 +26,12 @@
       background:rgba(0,0,0,.85); color:#fff; padding:12px; border-radius:12px; font:14px/1.3 system-ui;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index:10000;">
     <div style="display:flex; justify-content:space-between; align-items:center;">
-      <strong>Inventory</strong>
-      <button id="scanBtn" style="padding:4px 8px; background:#007acc; color:white; border:none; border-radius:4px; cursor:pointer;">Scan (E)</button>
+      <strong>Room 5 Status</strong>
+      <button id="actionBtn" style="padding:4px 8px; background:#007acc; color:white; border:none; border-radius:4px; cursor:pointer;">Action (E)</button>
     </div>
-    <div id="tools">🔧 Scanner: Available</div>
-    <div id="hand">📦 Empty</div>
-    <div style="opacity:.8; font-size:12px;">Q = Drop | E = Scan</div>
+    <div id="status">🏗️ Room 5: Ready for Development</div>
+    <div id="progress">📋 Prototype Planning Phase</div>
+    <div style="opacity:.8; font-size:12px;">Q = Drop | E = Action | I = Inventory</div>
   </div>
 </div>
 
@@ -41,8 +41,7 @@
 
     <!-- Assets -->
     <a-assets>
-        <a-asset-item id="woodBlockModel" src="../../models/wood_block.glb"></a-asset-item>
-        <a-asset-item id="scannerModel" src="../../models/sci-fi_scanner.glb"></a-asset-item>
+        <!-- Add your Room 5 specific assets here -->
     </a-assets>
 
     <!-- Lighting -->
@@ -51,13 +50,14 @@
     <a-light type="point" position="0 3 0" color="#ffffff" intensity="1.5" distance="20"></a-light>
     <a-light type="point" position="5 2 5" color="#ffffff" intensity="0.8" distance="15"></a-light>
     <a-light type="point" position="-5 2 -5" color="#ffffff" intensity="0.8" distance="15"></a-light>
-    <!-- Room 4 Structure (16x16) -->
+
+    <!-- Room 5 Structure (16x16) -->
     <a-box position="0 -0.05 0" width="16" height="0.1" depth="16"
            material="color: #e0e0e0; roughness: 0.3"></a-box>
     <a-box position="0 3.05 0" width="16" height="0.1" depth="16"
            material="color: #f5f5f5; roughness: 0.2"></a-box>
 
-    <!-- Room 4 Walls -->
+    <!-- Room 5 Walls -->
     <a-box position="0 1.5 -8" width="16" height="3" depth="0.3"
            material="color: #d0d0d0; roughness: 0.4"></a-box>
     <a-box position="-6 1.5 8" width="4" height="3" depth="0.3"
@@ -69,63 +69,45 @@
     <a-box position="8 1.5 0" width="0.3" height="3" depth="16"
            material="color: #d0d0d0; roughness: 0.4"></a-box>
 
-    <!-- Door back to Room 3 -->
-    <a-box id="door-room3" position="-2 1.5 8" width="1.5" height="2.5" depth="0.3"
+    <!-- Door back to Room 4 -->
+    <a-box id="door-room4" position="-2 1.5 8" width="1.5" height="2.5" depth="0.3"
            material="color: #4A4A4A; roughness: 0.3"
-           class="door" data-target="../room3/room3.html"></a-box>
-    <a-text position="-2 2.8 7.8" rotation="0 180 0" value="← ROOM 3" align="center"
+           class="door" data-target="../room4/room4.html"></a-box>
+    <a-text position="-2 2.8 7.8" rotation="0 180 0" value="← ROOM 4" align="center"
             color="red" scale="0.8 0.8 0.8"></a-text>
     <a-text position="-2 2.3 7.8" rotation="0 180 0" value="(Back)" align="center"
             color="white" scale="0.4 0.4 0.4"></a-text>
 
-    <!-- Door to Room 5 -->
-    <a-box id="door-room5" position="2 1.5 8" width="1.5" height="2.5" depth="0.3"
-           material="color: #9C27B0; roughness: 0.3"
-           class="door" data-target="../room5/room5.html"></a-box>
-    <a-text position="2 2.8 7.8" rotation="0 180 0" value="ROOM 5 →" align="center"
+    <!-- Exit Door (Future: could lead to final area or back to entrance) -->
+    <a-box id="door-exit" position="2 1.5 8" width="1.5" height="2.5" depth="0.3"
+           material="color: #FFD700; roughness: 0.3"
+           class="door" data-target="../entrance.html"></a-box>
+    <a-text position="2 2.8 7.8" rotation="0 180 0" value="EXIT →" align="center"
             color="red" scale="0.9 0.9 0.9"></a-text>
-    <a-text position="2 2.3 7.8" rotation="0 180 0" value="(Prototype!)" align="center"
+    <a-text position="2 2.3 7.8" rotation="0 180 0" value="(Complete!)" align="center"
             color="white" scale="0.4 0.4 0.4"></a-text>
 
     <!-- Room Title -->
-    <a-text position="0 2.5 -7" value="ROOM 4" align="center"
+    <a-text position="0 2.5 -7" value="ROOM 5 - PROTOTYPE SPACE" align="center"
             color="black" scale="1.2 1.2 1.2"></a-text>
 
-    <!-- Scanner Tool - grouped for proper alignment -->
-    <a-entity id="scanner-group" position="0 1 -2" class="tool pickupable" data-tool="scanner">
-        <!-- Invisible pickup trigger (centered on group origin) -->
-        <a-box id="scanner-trigger"
-               class="tool pickupable"
-               data-tool="scanner"
-               position="0 0 0"
-               width="1.5" height="1.5" depth="1.5"
-               material="color: cyan; opacity: 0"></a-box>
-        <!-- Scanner model (auto-centered, non-interactive) -->
-        <a-gltf-model id="scanner"
-                      gltf-model="#scannerModel"
-                      scale="0.1 0.1 0.1"
-                      autocenter-gltf="ground: false"
-                      class="clickthrough"></a-gltf-model>
-    </a-entity>
+    <!-- Placeholder Content for Room 5 Development -->
+    <a-box position="0 1 0" width="2" height="2" depth="2"
+           material="color: #4CAF50; roughness: 0.3"
+           class="placeholder interactive"
+           data-info="Room 5 Prototype Area - Ready for your next innovative puzzle concept!"></a-box>
+    <a-text position="0 2.2 0" value="ROOM 5\nPROTOTYPE" align="center"
+            color="white" scale="0.8 0.8 0.8"></a-text>
 
-    <!-- Material 1: Hanfbeton (Hemp Concrete) -->
-    <a-box id="material-hanfbeton" position="-3 0.25 -2" width="0.5" height="0.5" depth="0.5"
-           material="color: #A0522D"
-           class="material pickupable scannable"
-           data-material="hanfbeton"
-           data-info="HANFBETON:\nCO2-positive material\nRenewable hemp fibers\nNatural lime binder\nExcellent insulation"></a-box>
-    <a-text position="-3 0.8 -2" value="Hanfbeton" align="center"
-            color="black" scale="0.4 0.4 0.4"></a-text>
-
-    <!-- Material 2: Holz (Wood) -->
-    <a-box id="material-holz" position="3 0.25 -2" width="0.5" height="0.5" depth="0.5"
-           src="woodBlockModel"
-           class="material pickupable scannable"
-           data-material="holz"
-           data-info="HOLZ:\nRenewable resource\nCarbon storage\nRequires treatment\nModerate sustainability"></a-box>
-    <a-text position="3 0.8 -2" value="Holz" align="center"
-            color="black" scale="0.4 0.4 0.4"></a-text>
-
+    <!-- Development Notes (visible placeholder) -->
+    <a-plane position="-5 2 -3" width="3" height="2" material="color: #2196F3; opacity: 0.8">
+        <a-text position="0 0.5 0.01" value="ROOM 5 DEVELOPMENT" align="center"
+                color="white" scale="0.6 0.6 0.6"></a-text>
+        <a-text position="0 0 0.01" value="• New puzzle mechanics\n• Advanced interactions\n• Enhanced UI features" align="center"
+                color="white" scale="0.4 0.4 0.4"></a-text>
+        <a-text position="0 -0.5 0.01" value="Ready for innovation!" align="center"
+                color="yellow" scale="0.5 0.5 0.5"></a-text>
+    </a-plane>
 
     <a-entity id="leftHand"
               hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
@@ -140,35 +122,28 @@
             <a-cursor position="0 0 -1"
                       geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
                       material="color: white; shader: flat"
-                      raycaster="objects: .door, .material, .tool, .scannable; ignore: .clickthrough; showLine: true"></a-cursor>
-        </a-entity>
-
-    <!-- UI Text -->
-    <a-text id="message" position="0 2.8 2"
-            value="Welcome to Room 4!\nFind scanner first! Click materials to pick up, E to scan what you look at, Q to drop."
-            align="center" color="black" scale="0.5 0.5 0.5" look-at="#playerCam"></a-text>
+                      raycaster="objects: .door, .interactive; showLine: true"></a-cursor>
 
         <!-- World-space HUD fallback (hidden unless DOM Overlay is unavailable) -->
         <a-entity id="world-hud" position="-1.2 -0.8 -1.8" visible="false">
             <a-plane width="2.2" height="0.8" material="color: #333333; opacity: 0.85" position="0 0 0">
-                <a-text value="INVENTORY" position="0 0.2 0.01" align="center" color="white" scale="0.5 0.5 0.5"></a-text>
-                <a-text id="world-inventory-tools" value="🔧 Scanner: Available" position="0 0 0.01" align="center" color="lime" scale="0.35 0.35 0.35"></a-text>
-                <a-text id="world-hand-content" value="📦 Empty" position="0 -0.15 0.01" align="center" color="gray" scale="0.35 0.35 0.35"></a-text>
-                <a-text value="Q = Drop | E = Scan" position="0 -0.3 0.01" align="center" color="yellow" scale="0.28 0.28 0.28"></a-text>
+                <a-text value="ROOM 5 STATUS" position="0 0.2 0.01" align="center" color="white" scale="0.5 0.5 0.5"></a-text>
+                <a-text id="world-status" value="🏗️ Ready for Development" position="0 0 0.01" align="center" color="lime" scale="0.35 0.35 0.35"></a-text>
+                <a-text id="world-progress" value="📋 Prototype Planning" position="0 -0.15 0.01" align="center" color="cyan" scale="0.35 0.35 0.35"></a-text>
+                <a-text value="Q = Drop | E = Action" position="0 -0.3 0.01" align="center" color="yellow" scale="0.28 0.28 0.28"></a-text>
             </a-plane>
         </a-entity>
 
         <!-- VR Inventory instruction (only visible in VR without DOM Overlay) -->
         <a-text id="vr-inventory-hint" position="-2 -1.2 -1.8"
-                value="Press I for Inventory" align="center"
+                value="Press I for Interface" align="center"
                 color="#666666" scale="0.3 0.3 0.3" visible="false"></a-text>
+        </a-entity>
 
-        <!-- Scan Result Tooltip (hidden by default) -->
-        <a-plane id="scan-tooltip" position="0 0.5 -1.5" width="2.5" height="1.5"
-                 material="color: #000000; opacity: 0.9" visible="false">
-            <a-text id="scan-info" position="0 0 0.01" value="" align="center"
-                    color="cyan" scale="0.3 0.3 0.3"></a-text>
-        </a-plane>
+    <!-- UI Text -->
+    <a-text id="message" position="0 2.8 2"
+            value="Welcome to Room 5 - Prototype Development Space!\nThis room is ready for your next innovative puzzle concept."
+            align="center" color="black" scale="0.5 0.5 0.5" look-at="#playerCam"></a-text>
 </a-scene>
 
 <script>
@@ -201,7 +176,7 @@
         if (isInVRWithoutDOMOverlay) {
             vrHudVisible = !vrHudVisible;
             showWorldHud(vrHudVisible);
-            console.log('VR inventory toggled:', vrHudVisible);
+            console.log('VR interface toggled:', vrHudVisible);
         }
     }
     function showVRHint(show) {
@@ -212,7 +187,7 @@
     }
 
     // Initialize immediately for desktop
-    console.log('Initializing UI...');
+    console.log('Initializing Room 5 UI...');
     showOverlay2D();
 
     // Also set up when scene loads
@@ -240,7 +215,7 @@
                 // DOM Overlay not supported → use toggleable world-space HUD
                 hideOverlay2D();
                 showWorldHud(false); // Start hidden, toggle with I key
-                showVRHint(true);    // Show "Press I for Inventory" hint
+                showVRHint(true);    // Show "Press I for Interface" hint
                 isInVRWithoutDOMOverlay = true;
                 vrHudVisible = false;
             }
@@ -257,13 +232,13 @@
     }
 
     // Wire desktop button to game logic
-    document.getElementById('scanBtn')?.addEventListener('click', () => {
-        console.log('Scan button clicked');
-        // Trigger same scan function as 'E' key
+    document.getElementById('actionBtn')?.addEventListener('click', () => {
+        console.log('Action button clicked');
+        // Trigger same action function as 'E' key
         document.dispatchEvent(new KeyboardEvent('keydown', {key: 'e'}));
     });
 
-    // Add global keyboard listener for I key (VR inventory toggle)
+    // Add global keyboard listener for I key (VR interface toggle)
     document.addEventListener('keydown', (event) => {
         if (event.key === 'i' || event.key === 'I') {
             toggleVRInventory();
