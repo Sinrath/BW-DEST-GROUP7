@@ -14,15 +14,35 @@
     <script src="https://unpkg.com/aframe-look-at-component@1.0.0/dist/aframe-look-at-component.min.js"></script>
 
     <script src="../shared/movement.js"></script>
+    <script src="../shared/components.js"></script>
     <script src="room4.js"></script>
 
 </head>
 <body>
+<!-- 2D overlay (works on PC; becomes DOM Overlay in VR where supported) -->
+<div id="ui" style="position:fixed; inset:0; pointer-events:none; z-index:9999; display:block;">
+  <div id="ui-panel" style="
+      position:fixed; left:20px; bottom:20px; width:340px; pointer-events:auto;
+      background:rgba(0,0,0,.85); color:#fff; padding:12px; border-radius:12px; font:14px/1.3 system-ui;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index:10000;">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <strong>Inventory</strong>
+      <button id="scanBtn" style="padding:4px 8px; background:#007acc; color:white; border:none; border-radius:4px; cursor:pointer;">Scan (E)</button>
+    </div>
+    <div id="tools">🔧 Scanner: Available</div>
+    <div id="hand">📦 Empty</div>
+    <div style="opacity:.8; font-size:12px;">Q = Drop | E = Scan</div>
+  </div>
+</div>
+
 <a-scene background="color: #f0f0f0"
-         vr-mode-ui="enabled: true">
+         vr-mode-ui="enabled: true"
+         webxr="optionalFeatures: dom-overlay, local-floor; overlayElement: #ui">
 
     <!-- Assets -->
     <a-assets>
+        <a-asset-item id="woodBlockModel" src="../../models/wood_block.glb"></a-asset-item>
+        <a-asset-item id="scannerModel" src="../../models/sci-fi_scanner.glb"></a-asset-item>
     </a-assets>
 
     <!-- Lighting -->
@@ -58,25 +78,59 @@
     <a-text position="-2 2.3 7.8" rotation="0 180 0" value="(Back)" align="center"
             color="white" scale="0.4 0.4 0.4"></a-text>
 
-    <!-- Exit Door -->
-    <a-box id="door-exit" position="2 1.5 8" width="1.5" height="2.5" depth="0.3"
-           material="color: #FFD700; roughness: 0.3"
-           class="door" data-target="../entrance.html"></a-box>
-    <a-text position="2 2.8 7.8" rotation="0 180 0" value="EXIT →" align="center"
+    <!-- Door to Room 5 -->
+    <a-box id="door-room5" position="2 1.5 8" width="1.5" height="2.5" depth="0.3"
+           material="color: #9C27B0; roughness: 0.3"
+           class="door" data-target="../room5/room5.html"></a-box>
+    <a-text position="2 2.8 7.8" rotation="0 180 0" value="ROOM 5 →" align="center"
             color="red" scale="0.9 0.9 0.9"></a-text>
-    <a-text position="2 2.3 7.8" rotation="0 180 0" value="(Escape!)" align="center"
+    <a-text position="2 2.3 7.8" rotation="0 180 0" value="(Prototype!)" align="center"
             color="white" scale="0.4 0.4 0.4"></a-text>
 
     <!-- Room Title -->
-    <a-text position="0 2.5 -7" value="ROOM 4 - FINAL ROOM" align="center"
+    <a-text position="0 2.5 -7" value="ROOM 4" align="center"
             color="black" scale="1.2 1.2 1.2"></a-text>
 
-
-        <a-entity id="leftHand"
-                  hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
-        <a-entity id="rightHand"
-                  hand-controls="hand: right; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
+    <!-- Scanner Tool - grouped for proper alignment -->
+    <a-entity id="scanner-group" position="0 1 -2" class="tool pickupable" data-tool="scanner">
+        <!-- Invisible pickup trigger (centered on group origin) -->
+        <a-box id="scanner-trigger"
+               class="tool pickupable"
+               data-tool="scanner"
+               position="0 0 0"
+               width="1.5" height="1.5" depth="1.5"
+               material="color: cyan; opacity: 0"></a-box>
+        <!-- Scanner model (auto-centered, non-interactive) -->
+        <a-gltf-model id="scanner"
+                      gltf-model="#scannerModel"
+                      scale="0.1 0.1 0.1"
+                      autocenter-gltf="ground: false"
+                      class="clickthrough"></a-gltf-model>
     </a-entity>
+
+    <!-- Material 1: Hanfbeton (Hemp Concrete) -->
+    <a-box id="material-hanfbeton" position="-3 0.25 -2" width="0.5" height="0.5" depth="0.5"
+           material="color: #A0522D"
+           class="material pickupable scannable"
+           data-material="hanfbeton"
+           data-info="HANFBETON:\nCO2-positive material\nRenewable hemp fibers\nNatural lime binder\nExcellent insulation"></a-box>
+    <a-text position="-3 0.8 -2" value="Hanfbeton" align="center"
+            color="black" scale="0.4 0.4 0.4"></a-text>
+
+    <!-- Material 2: Holz (Wood) -->
+    <a-box id="material-holz" position="3 0.25 -2" width="0.5" height="0.5" depth="0.5"
+           src="woodBlockModel"
+           class="material pickupable scannable"
+           data-material="holz"
+           data-info="HOLZ:\nRenewable resource\nCarbon storage\nRequires treatment\nModerate sustainability"></a-box>
+    <a-text position="3 0.8 -2" value="Holz" align="center"
+            color="black" scale="0.4 0.4 0.4"></a-text>
+
+
+    <a-entity id="leftHand"
+              hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
+    <a-entity id="rightHand"
+              hand-controls="hand: right; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
 
     <a-entity id="rig"
               position="0 1.6 5"
@@ -86,13 +140,136 @@
             <a-cursor position="0 0 -1"
                       geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
                       material="color: white; shader: flat"
-                      raycaster="objects: .door; showLine: true"></a-cursor>
+                      raycaster="objects: .door, .material, .tool, .scannable; ignore: .clickthrough; showLine: true"></a-cursor>
         </a-entity>
 
     <!-- UI Text -->
     <a-text id="message" position="0 2.8 2"
-            value="Welcome to Room 4 - The Final Room!\nUse EXIT door to return to entrance."
+            value="Welcome to Room 4!\nFind scanner first! Click materials to pick up, E to scan what you look at, Q to drop."
             align="center" color="black" scale="0.5 0.5 0.5" look-at="#playerCam"></a-text>
+
+        <!-- World-space HUD fallback (hidden unless DOM Overlay is unavailable) -->
+        <a-entity id="world-hud" position="-1.2 -0.8 -1.8" visible="false">
+            <a-plane width="2.2" height="0.8" material="color: #333333; opacity: 0.85" position="0 0 0">
+                <a-text value="INVENTORY" position="0 0.2 0.01" align="center" color="white" scale="0.5 0.5 0.5"></a-text>
+                <a-text id="world-inventory-tools" value="🔧 Scanner: Available" position="0 0 0.01" align="center" color="lime" scale="0.35 0.35 0.35"></a-text>
+                <a-text id="world-hand-content" value="📦 Empty" position="0 -0.15 0.01" align="center" color="gray" scale="0.35 0.35 0.35"></a-text>
+                <a-text value="Q = Drop | E = Scan" position="0 -0.3 0.01" align="center" color="yellow" scale="0.28 0.28 0.28"></a-text>
+            </a-plane>
+        </a-entity>
+
+        <!-- VR Inventory instruction (only visible in VR without DOM Overlay) -->
+        <a-text id="vr-inventory-hint" position="-2 -1.2 -1.8"
+                value="Press I for Inventory" align="center"
+                color="#666666" scale="0.3 0.3 0.3" visible="false"></a-text>
+
+        <!-- Scan Result Tooltip (hidden by default) -->
+        <a-plane id="scan-tooltip" position="0 0.5 -1.5" width="2.5" height="1.5"
+                 material="color: #000000; opacity: 0.9" visible="false">
+            <a-text id="scan-info" position="0 0 0.01" value="" align="center"
+                    color="cyan" scale="0.3 0.3 0.3"></a-text>
+        </a-plane>
 </a-scene>
+
+<script>
+(function () {
+    const overlay = document.getElementById('ui');
+    const scene = document.querySelector('a-scene');
+    let isInVRWithoutDOMOverlay = false;
+    let vrHudVisible = false;
+
+    function showOverlay2D() {
+        if (overlay) {
+            overlay.style.display = 'block';
+            console.log('2D overlay shown');
+        }
+    }
+    function hideOverlay2D() {
+        if (overlay) {
+            overlay.style.display = 'none';
+            console.log('2D overlay hidden');
+        }
+    }
+    function showWorldHud(v) {
+        const worldHud = document.getElementById('world-hud');
+        if (worldHud) {
+            worldHud.setAttribute('visible', !!v);
+            console.log('World HUD:', !!v ? 'shown' : 'hidden');
+        }
+    }
+    function toggleVRInventory() {
+        if (isInVRWithoutDOMOverlay) {
+            vrHudVisible = !vrHudVisible;
+            showWorldHud(vrHudVisible);
+            console.log('VR inventory toggled:', vrHudVisible);
+        }
+    }
+    function showVRHint(show) {
+        const hint = document.getElementById('vr-inventory-hint');
+        if (hint) {
+            hint.setAttribute('visible', show);
+        }
+    }
+
+    // Initialize immediately for desktop
+    console.log('Initializing UI...');
+    showOverlay2D();
+
+    // Also set up when scene loads
+    if (scene) {
+        scene.addEventListener('loaded', () => {
+            console.log('Scene loaded, ensuring 2D overlay is visible');
+            showOverlay2D();
+            showWorldHud(false);
+        });
+
+        // Entering VR: choose DOM Overlay if available, otherwise world HUD
+        scene.addEventListener('enter-vr', () => {
+            console.log('Entering VR mode');
+            const session = scene.renderer?.xr?.getSession?.();
+            const domOverlayActive = !!(session && session.domOverlayState);
+            console.log('DOM Overlay active:', domOverlayActive);
+
+            if (domOverlayActive) {
+                // Keep the 2D overlay (now rendered *inside* XR as a DOM Overlay)
+                showOverlay2D();
+                showWorldHud(false);
+                showVRHint(false);
+                isInVRWithoutDOMOverlay = false;
+            } else {
+                // DOM Overlay not supported → use toggleable world-space HUD
+                hideOverlay2D();
+                showWorldHud(false); // Start hidden, toggle with I key
+                showVRHint(true);    // Show "Press I for Inventory" hint
+                isInVRWithoutDOMOverlay = true;
+                vrHudVisible = false;
+            }
+        });
+
+        // Back to flat screen
+        scene.addEventListener('exit-vr', () => {
+            console.log('Exiting VR mode');
+            showOverlay2D();
+            showWorldHud(false);
+            showVRHint(false);
+            isInVRWithoutDOMOverlay = false;
+        });
+    }
+
+    // Wire desktop button to game logic
+    document.getElementById('scanBtn')?.addEventListener('click', () => {
+        console.log('Scan button clicked');
+        // Trigger same scan function as 'E' key
+        document.dispatchEvent(new KeyboardEvent('keydown', {key: 'e'}));
+    });
+
+    // Add global keyboard listener for I key (VR inventory toggle)
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'i' || event.key === 'I') {
+            toggleVRInventory();
+        }
+    });
+})();
+</script>
 </body>
 </html>

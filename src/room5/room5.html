@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>VR Escape Room - Room 3</title>
-    <meta name="description" content="VR Escape Room Room 3 - A-Frame">
+    <title>VR Escape Room - Room 5</title>
+    <meta name="description" content="VR Escape Room Room 5 - A-Frame">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
     <!-- A-Frame -->
@@ -15,17 +15,19 @@
 
     <script src="../shared/movement.js"></script>
     <script src="../shared/components.js"></script>
-    <script src="room3.js"></script>
+    <script src="room5.js"></script>
 
 </head>
 <body>
+
 <a-scene background="color: #f0f0f0"
          vr-mode-ui="enabled: true">
 
     <!-- Assets -->
     <a-assets>
-        <a-asset-item id="woodBlockModel" src="../../models/wood_block.glb"></a-asset-item>
         <a-asset-item id="table" src="../../models/office_table.glb"></a-asset-item>
+        <a-asset-item id="keyModel" src="../../models/key.glb"></a-asset-item>
+        <a-asset-item id="lockedDoorModel" src="../../models/door_with_frame.glb"></a-asset-item>
     </a-assets>
 
     <!-- Lighting -->
@@ -34,13 +36,14 @@
     <a-light type="point" position="0 3 0" color="#ffffff" intensity="1.5" distance="20"></a-light>
     <a-light type="point" position="5 2 5" color="#ffffff" intensity="0.8" distance="15"></a-light>
     <a-light type="point" position="-5 2 -5" color="#ffffff" intensity="0.8" distance="15"></a-light>
-    <!-- Room 3 Structure (16x16) -->
+
+    <!-- Room 5 Structure (16x16) -->
     <a-box position="0 -0.05 0" width="16" height="0.1" depth="16"
            material="color: #e0e0e0; roughness: 0.3"></a-box>
     <a-box position="0 3.05 0" width="16" height="0.1" depth="16"
            material="color: #f5f5f5; roughness: 0.2"></a-box>
 
-    <!-- Room 3 Walls -->
+    <!-- Room 5 Walls -->
     <a-box position="0 1.5 -8" width="16" height="3" depth="0.3"
            material="color: #d0d0d0; roughness: 0.4"></a-box>
     <a-box position="-6 1.5 8" width="4" height="3" depth="0.3"
@@ -52,26 +55,26 @@
     <a-box position="8 1.5 0" width="0.3" height="3" depth="16"
            material="color: #d0d0d0; roughness: 0.4"></a-box>
 
-    <!-- Door back to Room 2 -->
-    <a-box id="door-room2" position="-2 1.5 8" width="1.5" height="2.5" depth="0.3"
+    <!-- Door back to Room 4 -->
+    <a-box id="door-room4" position="-2 1.5 8" width="1.5" height="2.5" depth="0.3"
            material="color: #4A4A4A; roughness: 0.3"
-           class="door" data-target="../room2/room2.html"></a-box>
-    <a-text position="-2 2.8 7.8" rotation="0 180 0" value="← ROOM 2" align="center"
+           class="door" data-target="../room4/room4.html"></a-box>
+    <a-text position="-2 2.8 7.8" rotation="0 180 0" value="← ROOM 4" align="center"
             color="red" scale="0.8 0.8 0.8"></a-text>
     <a-text position="-2 2.3 7.8" rotation="0 180 0" value="(Back)" align="center"
             color="white" scale="0.4 0.4 0.4"></a-text>
 
-    <!-- Door to Room 4 -->
-    <a-box id="door-room4" position="2 1.5 8" width="1.5" height="2.5" depth="0.3"
+    <!-- Door to Room 6 -->
+    <a-box id="door-room6" position="2 1.5 8" width="1.5" height="2.5" depth="0.3"
            material="color: #4A4A4A; roughness: 0.3"
-           class="door" data-target="../room4/room4.html"></a-box>
-    <a-text position="2 2.8 7.8" rotation="0 180 0" value="ROOM 4 →" align="center"
+           class="door" data-target="../room6/room6.html"></a-box>
+    <a-text position="2 2.8 7.8" rotation="0 180 0" value="ROOM 6 →" align="center"
             color="red" scale="0.8 0.8 0.8"></a-text>
-    <a-text position="2 2.3 7.8" rotation="0 180 0" value="(Final Room)" align="center"
+    <a-text position="2 2.3 7.8" rotation="0 180 0" value="(Next)" align="center"
             color="white" scale="0.4 0.4 0.4"></a-text>
 
     <!-- Room Title -->
-    <a-text position="0 2.5 -7" value="ROOM 3" align="center"
+    <a-text position="0 2.5 -7" value="ROOM 5" align="center"
             color="black" scale="1.2 1.2 1.2"></a-text>
 
     <!-- Table -->
@@ -95,13 +98,6 @@
     <a-text position="0.8 1.3 1" value="Less Sustainable" align="center"
             color="black" scale="0.4 0.4 0.4"></a-text>
 
-    <!-- Wood Block Model moved to side -->
-    <a-gltf-model id="wood-sample" src="#woodBlockModel"
-                  position="-5 0.25 -3"
-                  scale="0.05 0.05 0.05"
-                  rotation="0 0 0"
-                  class="material pickupable"
-                  data-material="wood"></a-gltf-model>
 
     <!-- Material 1: Hanfbeton (Hemp Concrete) - Most sustainable -->
     <a-box id="material-hanfbeton" position="-3 0.25 3" width="0.5" height="0.5" depth="0.5"
@@ -119,6 +115,27 @@
     <a-text position="3 0.8 3" value="Holz" align="center"
             color="black" scale="0.4 0.4 0.4"></a-text>
 
+    <!-- Locked Door (initially visible, but not interactive) -->
+    <a-gltf-model id="locked-door" src="#lockedDoorModel"
+                  position="0 0 -7.5"
+                  scale="0.02 0.02 0.02"
+                  rotation="0 0 0"
+                  autocenter-gltf="ground: true"></a-gltf-model>
+    <a-text position="0 2 -7" value="🔒 LOCKED DOOR" align="center"
+            color="red" scale="0.6 0.6 0.6"></a-text>
+    <a-text position="0 1.5 -7" value="Find the key!" align="center"
+            color="orange" scale="0.4 0.4 0.4"></a-text>
+
+    <!-- Key (hidden initially, drops when puzzle solved) -->
+    <a-gltf-model id="key" src="#keyModel"
+                  position="0 4 1"
+                  scale="0.001 0.001 0.001"
+                  rotation="0 0 0"
+                  class="key pickupable"
+                  data-item="key"
+                  visible="false"
+                  autocenter-gltf="ground: false"></a-gltf-model>
+
     <a-entity id="leftHand"
               hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
     <a-entity id="rightHand"
@@ -132,7 +149,7 @@
             <a-cursor position="0 0 -1"
                       geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
                       material="color: white; shader: flat"
-                      raycaster="objects: .door, .material, .sorting-spot, .placed-material; showLine: true"></a-cursor>
+                      raycaster="objects: .door, .material, .key, .sorting-spot, .placed-material; showLine: true"></a-cursor>
         </a-entity>
 
     <!-- UI Text -->

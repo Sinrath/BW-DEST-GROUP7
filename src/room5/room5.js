@@ -1,4 +1,4 @@
-// Room 3 - Material sorting functionality
+// Room 5 - Material sorting functionality + Key puzzle
 
 // Global state for material sorting puzzle
 let isHoldingMaterial = false;
@@ -7,11 +7,12 @@ let placedMaterials = {
     spot1: null,
     spot2: null
 };
+let hasKey = false;
+let puzzleSolved = false;
+let doorUnlocked = false;
 
-
-// Material pickup functionality
+// Material pickup functionality (from Room 3)
 function handleMaterialPickup(event) {
-
     const material = event.target;
     const materialType = material.getAttribute('data-material');
     const playerCam = document.querySelector('#playerCam');
@@ -55,7 +56,7 @@ function handleMaterialPickup(event) {
     }
 }
 
-// Handle placement on sorting spots
+// Handle placement on sorting spots (from Room 3)
 function handleSpotClick(event) {
     const spot = event.target;
     const spotId = spot.getAttribute('id');
@@ -131,7 +132,7 @@ function handleSpotClick(event) {
     }
 }
 
-// Handle clicking on placed materials to pick them back up
+// Handle clicking on placed materials to pick them back up (from Room 3)
 function handlePlacedMaterialClick(event) {
     if (isHoldingMaterial) {
         return; // Already holding something
@@ -179,7 +180,7 @@ function handlePlacedMaterialClick(event) {
     console.log('Material picked up from spot:', materialType);
 }
 
-// Material drop functionality (similar to wood drop)
+// Material drop functionality (from Room 3)
 function handleMaterialDrop(event) {
     if (isHoldingMaterial) {
         const heldMaterial = document.querySelector('#held-material');
@@ -233,7 +234,7 @@ function handleMaterialDrop(event) {
     }
 }
 
-// Update spot colors based on current state
+// Update spot colors based on current state (from Room 3 + key drop)
 function updateSpotColors() {
     const spot1 = document.querySelector('#spot1');
     const spot2 = document.querySelector('#spot2');
@@ -252,6 +253,8 @@ function updateSpotColors() {
 
         // Check if puzzle is complete
         if (spot1Correct && spot2Correct) {
+            puzzleSolved = true;
+
             const message = document.querySelector('#message');
             if (message) {
                 message.setAttribute('value', '🎉 Puzzle Complete! Both materials are correctly sorted by sustainability!');
@@ -260,6 +263,11 @@ function updateSpotColors() {
             // Visual celebration - make spots pulse
             spot1.setAttribute('animation', 'property: scale; to: 1.2 1 1.2; dur: 1000; dir: alternate; loop: true');
             spot2.setAttribute('animation', 'property: scale; to: 1.2 1 1.2; dur: 1000; dir: alternate; loop: true');
+
+            // Drop the key after 2 seconds
+            setTimeout(() => {
+                dropKey();
+            }, 2000);
 
             console.log('Sorting puzzle completed!');
         } else {
@@ -275,29 +283,145 @@ function updateSpotColors() {
     }
 }
 
-// Extend the shared room-navigation to add material sorting
-AFRAME.registerComponent('room3-puzzles', {
+// Drop key when puzzle is solved
+function dropKey() {
+    const key = document.querySelector('#key');
+    if (key) {
+        key.setAttribute('visible', 'true');
+        key.setAttribute('animation', 'property: position; to: 0 2 1; dur: 1000; easing: easeInOutQuad');
+
+        // Ensure position is properly set after animation
+        setTimeout(() => {
+            key.setAttribute('position', '0 2 1');
+        }, 1100);
+
+        const message = document.querySelector('#message');
+        if (message) {
+            message.setAttribute('value', '🔑 A key has appeared! Click to pick it up and unlock the door.');
+        }
+
+        console.log('Key dropped successfully!');
+    }
+}
+
+// Door unlock with confetti effect
+function handleDoorUnlock(event) {
+    if (hasKey && !doorUnlocked) {
+        doorUnlocked = true;
+
+        // Create confetti effect
+        createConfetti();
+
+        // Update message
+        const message = document.querySelector('#message');
+        if (message) {
+            message.setAttribute('value', '🎉 Door Unlocked! Congratulations! You completed Room 5!');
+        }
+
+        console.log('Door unlocked with confetti!');
+    }
+}
+
+// Create confetti effect
+function createConfetti() {
+    const scene = document.querySelector('a-scene');
+    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500', '#ff69b4'];
+
+    // Create 50 confetti pieces
+    for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('a-box');
+        confetti.setAttribute('width', '0.1');
+        confetti.setAttribute('height', '0.1');
+        confetti.setAttribute('depth', '0.02');
+        confetti.setAttribute('material', `color: ${colors[Math.floor(Math.random() * colors.length)]}`);
+
+        // Random starting position around the door
+        const startX = (Math.random() - 0.5) * 4;
+        const startY = 2 + Math.random() * 2;
+        const startZ = -6 + (Math.random() - 0.5) * 2;
+        confetti.setAttribute('position', `${startX} ${startY} ${startZ}`);
+
+        // Random fall animation
+        const endX = startX + (Math.random() - 0.5) * 6;
+        const endY = 0;
+        const endZ = startZ + (Math.random() - 0.5) * 4;
+        const duration = 3000 + Math.random() * 2000;
+
+        confetti.setAttribute('animation__fall', `property: position; to: ${endX} ${endY} ${endZ}; dur: ${duration}; easing: easeInQuad`);
+        confetti.setAttribute('animation__spin', `property: rotation; to: ${Math.random() * 720} ${Math.random() * 720} ${Math.random() * 720}; dur: ${duration}; easing: linear`);
+
+        scene.appendChild(confetti);
+
+        // Remove confetti after animation
+        setTimeout(() => {
+            confetti.remove();
+        }, duration + 1000);
+    }
+}
+
+// Key pickup functionality
+function handleKeyPickup(event) {
+    if (!hasKey) {
+        const key = event.target;
+        key.setAttribute('visible', 'false');
+        hasKey = true;
+
+        const message = document.querySelector('#message');
+        if (message) {
+            message.setAttribute('value', '🔑 Key acquired! Click on the locked door to unlock it.');
+        }
+
+        // Update door texts
+        const doorText = document.querySelector('a-text[value="🔒 LOCKED DOOR"]');
+        const doorHint = document.querySelector('a-text[value="Find the key!"]');
+        if (doorText) doorText.setAttribute('value', '🔓 UNLOCKABLE DOOR');
+        if (doorText) doorText.setAttribute('color', 'green');
+        if (doorHint) doorHint.setAttribute('value', 'Click to unlock!');
+        if (doorHint) doorHint.setAttribute('color', 'green');
+
+        // Make door interactive
+        const door = document.querySelector('#locked-door');
+        if (door) {
+            door.classList.add('door');
+            door.setAttribute('data-target', '../room4/room4.html');  // or wherever you want it to lead
+
+            // Add click listener for confetti effect
+            door.addEventListener('click', handleDoorUnlock);
+        }
+
+        console.log('Key picked up! Door is now unlockable.');
+    }
+}
+
+// Room 5 material sorting system component
+AFRAME.registerComponent('room5-puzzles', {
     init: function () {
         // Wait for shared navigation to be ready
         setTimeout(() => {
-            this.addAllListeners();
+            this.addPuzzleListeners();
         }, 100);
     },
 
-    addAllListeners: function () {
-        // Add click listeners for all materials (including wood block)
+    addPuzzleListeners: function () {
+        // Add click listeners for materials
         const materials = document.querySelectorAll('.material');
         materials.forEach(material => {
             material.addEventListener('click', handleMaterialPickup);
         });
 
         // Add click listeners for sorting spots
-        const spots = document.querySelectorAll('.sorting-spot');
-        spots.forEach(spot => {
+        const sortingSpots = document.querySelectorAll('.sorting-spot');
+        sortingSpots.forEach(spot => {
             spot.addEventListener('click', handleSpotClick);
         });
 
-        // Add drop listener for materials (Q key)
+        // Add click listener for key
+        const key = document.querySelector('.key');
+        if (key) {
+            key.addEventListener('click', handleKeyPickup);
+        }
+
+        // Add keyboard listeners
         document.addEventListener('keydown', (event) => {
             if (event.key === 'q' || event.key === 'Q') {
                 if (isHoldingMaterial) {
@@ -305,6 +429,8 @@ AFRAME.registerComponent('room3-puzzles', {
                 }
             }
         });
+
+        console.log('Room 5 material sorting and key puzzle system initialized');
     }
 });
 
@@ -312,6 +438,9 @@ AFRAME.registerComponent('room3-puzzles', {
 document.addEventListener('DOMContentLoaded', function() {
     const scene = document.querySelector('a-scene');
     if (scene) {
-        scene.setAttribute('room3-puzzles', '');
+        scene.setAttribute('room5-puzzles', '');
     }
+
+    console.log('🔑 Room 5 - Material Sorting & Key Puzzle Loaded');
+    console.log('Sort materials by sustainability to unlock the door!');
 });

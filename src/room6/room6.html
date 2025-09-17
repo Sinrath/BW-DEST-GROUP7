@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>VR Escape Room - Room 6</title>
+    <meta name="description" content="VR Escape Room Room 6 - A-Frame">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <!-- A-Frame -->
+    <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
+
+    <!-- A-Frame Extras (movement controls and collision) -->
+    <script src="../../aframe-extras/dist/aframe-extras.js"></script>
+    <script src="https://unpkg.com/aframe-look-at-component@1.0.0/dist/aframe-look-at-component.min.js"></script>
+
+    <script src="../shared/movement.js"></script>
+    <script src="../shared/components.js"></script>
+    <script src="room6.js"></script>
+
+</head>
+<body>
+<!-- 2D overlay (works on PC; becomes DOM Overlay in VR where supported) -->
+<div id="ui" style="position:fixed; inset:0; pointer-events:none; z-index:9999; display:block;">
+  <div id="ui-panel" style="
+      position:fixed; left:20px; bottom:20px; width:340px; pointer-events:auto;
+      background:rgba(0,0,0,.85); color:#fff; padding:12px; border-radius:12px; font:14px/1.3 system-ui;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index:10000;">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <strong>Inventory</strong>
+      <button id="sawBtn" style="padding:4px 8px; background:#cc7700; color:white; border:none; border-radius:4px; cursor:pointer;">Use Saw (R)</button>
+    </div>
+    <div id="tools">🔧 Saw: Available</div>
+    <div id="usage-hint" style="opacity:.8; font-size:12px;">Click to pick up | R = Use Saw</div>
+  </div>
+</div>
+
+<a-scene background="color: #f0f0f0"
+         vr-mode-ui="enabled: true"
+         webxr="optionalFeatures: dom-overlay, local-floor; overlayElement: #ui">
+
+    <!-- Assets -->
+    <a-assets>
+        <a-asset-item id="saw" src="../../models/saw_tool.glb"></a-asset-item>
+    </a-assets>
+
+    <!-- Lighting -->
+    <a-light type="ambient" color="#ffffff" intensity="0.9"></a-light>
+    <a-light type="directional" position="2 4 2" color="#ffffff"
+             intensity="1.3"></a-light>
+    <a-light type="point" position="0 3 0" color="#ffffff" intensity="1.5"
+             distance="20"></a-light>
+    <a-light type="point" position="5 2 5" color="#ffffff" intensity="0.8"
+             distance="15"></a-light>
+    <a-light type="point" position="-5 2 -5" color="#ffffff" intensity="0.8"
+             distance="15"></a-light>
+
+    <!-- Room 6 Structure (16x16) -->
+    <a-box position="0 -0.05 0" width="16" height="0.1" depth="16"
+           material="color: #e0e0e0; roughness: 0.3"></a-box>
+    <a-box position="0 3.05 0" width="16" height="0.1" depth="16"
+           material="color: #f5f5f5; roughness: 0.2"></a-box>
+
+    <!-- Room 6 Walls -->
+    <a-box position="0 1.5 -8" width="16" height="3" depth="0.3"
+           material="color: #d0d0d0; roughness: 0.4"></a-box>
+    <a-box position="-6 1.5 8" width="4" height="3" depth="0.3"
+           material="color: #d0d0d0; roughness: 0.4"></a-box>
+    <a-box position="6 1.5 8" width="4" height="3" depth="0.3"
+           material="color: #d0d0d0; roughness: 0.4"></a-box>
+
+    <!-- Left wall with special saw interaction section -->
+    <a-box position="-8 1.5 4" width="0.3" height="3" depth="8"
+           material="color: #d0d0d0; roughness: 0.4"></a-box>
+    <a-box position="-8 1.5 -4" width="0.3" height="3" depth="8"
+           material="color: #d0d0d0; roughness: 0.4"></a-box>
+
+    <!-- Special wall section that can be cut with saw -->
+    <a-entity id="cuttable-wall-section" position="-8 1.5 0">
+        <!-- Outer wall layer (visible initially) - positioned for door-like rotation -->
+        <a-entity id="outer-wall-pivot" position="0 0 -1.5">
+            <a-box id="outer-wall"
+                   position="0 0 1.5"
+                   width="0.3" height="3" depth="3"
+                   material="color: #d0d0d0; roughness: 0.4"
+                   class="cuttable-wall"></a-box>
+        </a-entity>
+
+        <!-- Hidden wall layers (revealed when cut) - positioned behind outer wall -->
+        <a-entity id="wall-layers" position="0.15 0 0" visible="false">
+            <!-- Layer 1: Hanfbeton -->
+            <a-entity class="layer-pivot" position="0.1 0 -1.5">
+                <a-box class="material-layer" position="0 0 1.5" width="0.05" height="3" depth="3"
+                       material="color: #A0522D; roughness: 0.3"></a-box>
+                <!-- Text visible from opposite side -->
+                <a-plane position="-0.3 0 3" width="2" height="0.8" material="color: #000000; opacity: 0.8" rotation="0 90 0" side="back" visible="false"></a-plane>
+                <a-text position="-0.3 0 3" value="HANFBETON\n(Hemp Concrete)" align="center"
+                        color="#00FF00" scale="0.8 0.8 0.8" rotation="0 -90 0" font="roboto" visible="false"></a-text>
+            </a-entity>
+
+            <!-- Layer 2: Hanfziegel -->
+            <a-entity class="layer-pivot" position="0.2 0 -1.5">
+                <a-box class="material-layer" position="0 0 1.5" width="0.05" height="3" depth="3"
+                       material="color: #CD853F; roughness: 0.3"></a-box>
+                <!-- Text visible from opposite side -->
+                <a-plane position="-0.3 0 3" width="2" height="0.8" material="color: #000000; opacity: 0.8" rotation="0 90 0" side="back" visible="false"></a-plane>
+                <a-text position="-0.3 0 3" value="HANFZIEGEL\n(Hemp Bricks)" align="center"
+                        color="#FFD700" scale="0.8 0.8 0.8" rotation="0 -90 0" font="roboto" visible="false"></a-text>
+            </a-entity>
+
+            <!-- Layer 3: Holz -->
+            <a-entity class="layer-pivot" position="0.3 0 -1.5">
+                <a-box class="material-layer" position="0 0 1.5" width="0.05" height="3" depth="3"
+                       material="color: #8B4513; roughness: 0.3"></a-box>
+                <!-- Text visible from opposite side -->
+                <a-plane position="-0.3 0 3" width="1.5" height="0.8" material="color: #000000; opacity: 0.8" rotation="0 90 0" side="back" visible="false"></a-plane>
+                <a-text position="-0.3 0 3" value="HOLZ\n(Wood)" align="center"
+                        color="#FFFFFF" scale="0.8 0.8 0.8" rotation="0 -90 0" font="roboto" visible="false"></a-text>
+            </a-entity>
+
+            <!-- Layer 4: Kork -->
+            <a-entity class="layer-pivot" position="0.4 0 -1.5">
+                <a-box class="material-layer" position="0 0 1.5" width="0.05" height="3" depth="3"
+                       material="color: #DEB887; roughness: 0.3"></a-box>
+                <!-- Text visible from opposite side -->
+                <a-plane position="-0.3 0 3" width="1.5" height="0.8" material="color: #000000; opacity: 0.8" rotation="0 90 0" side="back" visible="false"></a-plane>
+                <a-text position="-0.3 0 3" value="KORK\n(Cork)" align="center"
+                        color="#FF6600" scale="0.8 0.8 0.8" rotation="0 -90 0" font="roboto" visible="false"></a-text>
+            </a-entity>
+
+            <!-- Layer 5: Pflanzenkohle Beton -->
+            <a-entity class="layer-pivot" position="0.5 0 -1.5">
+                <a-box class="material-layer" position="0 0 1.5" width="0.05" height="3" depth="3"
+                       material="color: #696969; roughness: 0.3"></a-box>
+                <!-- Text visible from opposite side -->
+                <a-plane position="-0.3 0 3" width="3" height="0.8" material="color: #000000; opacity: 0.8" rotation="0 90 0" side="back" visible="false"></a-plane>
+                <a-text position="-0.3 0 3" value="PFLANZENKOHLE\nBETON\n(Biochar Concrete)" align="center"
+                        color="#CYAN" scale="0.6 0.6 0.6" rotation="0 -90 0" font="roboto" visible="false"></a-text>
+            </a-entity>
+
+            <!-- Layer 6: Kupfer -->
+            <a-entity class="layer-pivot" position="0.6 0 -1.5">
+                <a-box class="material-layer" position="0 0 1.5" width="0.05" height="3" depth="3"
+                       material="color: #B87333; roughness: 0.3"></a-box>
+                <!-- Text visible from opposite side -->
+                <a-plane position="-0.3 0 3" width="1.8" height="0.8" material="color: #000000; opacity: 0.8" rotation="0 90 0" side="back" visible="false"></a-plane>
+                <a-text position="-0.3 0 3" value="KUPFER\n(Copper)" align="center"
+                        color="#FF4444" scale="0.8 0.8 0.8" rotation="0 -90 0" font="roboto" visible="false"></a-text>
+            </a-entity>
+
+            <!-- Layer 7: Lehm -->
+            <a-entity class="layer-pivot" position="0.7 0 -1.5">
+                <a-box class="material-layer" position="0 0 1.5" width="0.05" height="3" depth="3"
+                       material="color: #A0522D; roughness: 0.3"></a-box>
+                <!-- Text visible from opposite side -->
+                <a-plane position="-0.3 0 3" width="1.5" height="0.8" material="color: #000000; opacity: 0.8" rotation="0 90 0" side="back" visible="false"></a-plane>
+                <a-text position="-0.3 0 3" value="LEHM\n(Clay)" align="center"
+                        color="#FFFF00" scale="0.8 0.8 0.8" rotation="0 -90 0" font="roboto" visible="false"></a-text>
+            </a-entity>
+
+            <!-- Layer 8: Sumpfkalk -->
+            <a-entity class="layer-pivot" position="0.8 0 -1.5">
+                <a-box class="material-layer" position="0 0 1.5" width="0.05" height="3" depth="3"
+                       material="color: #EEE8AA; roughness: 0.3"></a-box>
+                <!-- Text visible from opposite side -->
+                <a-plane position="-0.3 0 3" width="2.2" height="0.8" material="color: #000000; opacity: 0.8" rotation="0 90 0" side="back" visible="false"></a-plane>
+                <a-text position="-0.3 0 3" value="SUMPFKALK\n(Lime Mortar)" align="center"
+                        color="#MAGENTA" scale="0.8 0.8 0.8" rotation="0 -90 0" font="roboto" visible="false"></a-text>
+            </a-entity>
+        </a-entity>
+
+        <!-- Highlight box to show where to use saw -->
+        <a-box id="saw-target"
+               width="0.35" height="3.1" depth="3.1"
+               material="color: yellow; opacity: 0.3"
+               visible="true"
+               class="saw-interactive"></a-box>
+    </a-entity>
+
+    <!-- Right wall -->
+    <a-box position="8 1.5 0" width="0.3" height="3" depth="16"
+           material="color: #d0d0d0; roughness: 0.4"></a-box>
+
+    <!-- Door back to Room 5 -->
+    <a-box id="door-room5" position="-2 1.5 8" width="1.5" height="2.5"
+           depth="0.3"
+           material="color: #4A4A4A; roughness: 0.3"
+           class="door" data-target="../room5/room5.html"></a-box>
+    <a-text position="-2 2.8 7.8" rotation="0 180 0" value="← ROOM 5"
+            align="center"
+            color="red" scale="0.8 0.8 0.8"></a-text>
+    <a-text position="-2 2.3 7.8" rotation="0 180 0" value="(Back)"
+            align="center"
+            color="white" scale="0.4 0.4 0.4"></a-text>
+
+    <!-- Room Title -->
+    <a-text position="0 2.5 -7" value="ROOM 6" align="center"
+            color="black" scale="1.2 1.2 1.2"></a-text>
+
+    <!-- Saw Tool - grouped for proper alignment (same position as Room 2) -->
+    <a-entity id="saw-group" position="0 0 0" class="tool pickupable" data-tool="saw">
+        <!-- Invisible pickup trigger (centered on saw origin) -->
+        <a-box id="saw-trigger"
+               class="tool pickupable"
+               data-tool="saw"
+               position="0 0.25 0"
+               width="1.5" height="1.5" depth="1.5"
+               material="color: cyan; opacity: 0"></a-box>
+        <!-- Saw model (same position, rotation, and scale as Room 2) -->
+        <a-entity id="saw"
+                  gltf-model="#saw"
+                  position="0 0 0"
+                  rotation="90 0 180"
+                  scale="0.002 0.002 0.002"
+                  class="clickthrough"></a-entity>
+    </a-entity>
+
+    <a-entity id="leftHand"
+              hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
+    <a-entity id="rightHand"
+              hand-controls="hand: right; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
+
+    <a-entity id="rig"
+              position="0 1.6 5"
+              movement-controls="controls: keyboard, touch"
+              simple-collision>
+        <a-entity id="playerCam" camera look-controls>
+            <a-cursor position="0 0 -1"
+                      geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                      material="color: white; shader: flat"
+                      raycaster="objects: .door, .tool, .cuttable-wall, .saw-interactive, .material-layer; showLine: true"></a-cursor>
+        </a-entity>
+
+        <!-- World-space HUD fallback (hidden unless DOM Overlay is unavailable) -->
+        <a-entity id="world-hud" position="-1.2 -0.8 -1.8" visible="false">
+            <a-plane width="2.2" height="0.8" material="color: #333333; opacity: 0.85" position="0 0 0">
+                <a-text value="INVENTORY" position="0 0.2 0.01" align="center" color="white" scale="0.5 0.5 0.5"></a-text>
+                <a-text id="world-inventory-tools" value="🔧 Saw: Available" position="0 0 0.01" align="center" color="lime" scale="0.35 0.35 0.35"></a-text>
+                <a-text value="Click to pick up" position="0 -0.15 0.01" align="center" color="gray" scale="0.35 0.35 0.35"></a-text>
+            </a-plane>
+        </a-entity>
+
+        <!-- VR Inventory instruction (only visible in VR without DOM Overlay) -->
+        <a-text id="vr-inventory-hint" position="-2 -1.2 -1.8"
+                value="Press I for Inventory" align="center"
+                color="#666666" scale="0.3 0.3 0.3" visible="false"></a-text>
+    </a-entity>
+
+    <!-- UI Text -->
+    <a-text id="message" position="0 2.2 2"
+            value="Welcome to Room 6!\nClick the saw to pick it up, then use it on the special wall section."
+            align="center" color="cyan" scale="0.5 0.5 0.5"
+            look-at="#playerCam"></a-text>
+</a-scene>
+
+<script>
+(function () {
+    const overlay = document.getElementById('ui');
+    const scene = document.querySelector('a-scene');
+    let isInVRWithoutDOMOverlay = false;
+    let vrHudVisible = false;
+
+    function showOverlay2D() {
+        if (overlay) {
+            overlay.style.display = 'block';
+            console.log('2D overlay shown');
+        }
+    }
+    function hideOverlay2D() {
+        if (overlay) {
+            overlay.style.display = 'none';
+            console.log('2D overlay hidden');
+        }
+    }
+    function showWorldHud(v) {
+        const worldHud = document.getElementById('world-hud');
+        if (worldHud) {
+            worldHud.setAttribute('visible', !!v);
+            console.log('World HUD:', !!v ? 'shown' : 'hidden');
+        }
+    }
+    function toggleVRInventory() {
+        if (isInVRWithoutDOMOverlay) {
+            vrHudVisible = !vrHudVisible;
+            showWorldHud(vrHudVisible);
+            console.log('VR inventory toggled:', vrHudVisible);
+        }
+    }
+    function showVRHint(show) {
+        const hint = document.getElementById('vr-inventory-hint');
+        if (hint) {
+            hint.setAttribute('visible', show);
+        }
+    }
+
+    // Initialize immediately for desktop
+    console.log('Initializing UI...');
+    showOverlay2D();
+
+    // Also set up when scene loads
+    if (scene) {
+        scene.addEventListener('loaded', () => {
+            console.log('Scene loaded, ensuring 2D overlay is visible');
+            showOverlay2D();
+            showWorldHud(false);
+        });
+
+        // Entering VR: choose DOM Overlay if available, otherwise world HUD
+        scene.addEventListener('enter-vr', () => {
+            console.log('Entering VR mode');
+            const session = scene.renderer?.xr?.getSession?.();
+            const domOverlayActive = !!(session && session.domOverlayState);
+            console.log('DOM Overlay active:', domOverlayActive);
+
+            if (domOverlayActive) {
+                // Keep the 2D overlay (now rendered *inside* XR as a DOM Overlay)
+                showOverlay2D();
+                showWorldHud(false);
+                showVRHint(false);
+                isInVRWithoutDOMOverlay = false;
+            } else {
+                // DOM Overlay not supported → use toggleable world-space HUD
+                hideOverlay2D();
+                showWorldHud(false); // Start hidden, toggle with I key
+                showVRHint(true);    // Show "Press I for Inventory" hint
+                isInVRWithoutDOMOverlay = true;
+                vrHudVisible = false;
+            }
+        });
+
+        // Back to flat screen
+        scene.addEventListener('exit-vr', () => {
+            console.log('Exiting VR mode');
+            showOverlay2D();
+            showWorldHud(false);
+            showVRHint(false);
+            isInVRWithoutDOMOverlay = false;
+        });
+    }
+
+    // Wire desktop button to saw usage
+    document.getElementById('sawBtn')?.addEventListener('click', () => {
+        console.log('Saw button clicked');
+        // Trigger same saw function as 'R' key
+        document.dispatchEvent(new KeyboardEvent('keydown', {key: 'r'}));
+    });
+
+    // Add global keyboard listener for I key (VR inventory toggle)
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'i' || event.key === 'I') {
+            toggleVRInventory();
+        }
+    });
+})();
+</script>
+</body>
+</html>
