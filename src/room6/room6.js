@@ -124,19 +124,19 @@ function cutWall() {
     if (outerWallPivot) {
         console.log('Starting wall animation...');
 
-        // Try multiple animation approaches
+        // Try multiple animation approaches - using same 75° angle as layers
         // Method 1: Rotation animation
         outerWallPivot.setAttribute('animation__rotation', {
             property: 'rotation',
-            to: '0 120 0',
+            to: '0 75 0',
             dur: 3000,
             easing: 'easeOutQuad'
         });
 
-        // Method 2: Position animation as backup
+        // Method 2: Position animation as backup - move further toward room center
         outerWallPivot.setAttribute('animation__position', {
             property: 'position',
-            to: '2 0 -1.5',
+            to: '3.0 0 -1.5',
             dur: 3000,
             easing: 'easeOutQuad',
             delay: 500
@@ -145,7 +145,7 @@ function cutWall() {
         // Method 3: Direct Three.js manipulation as ultimate fallback
         setTimeout(() => {
             if (outerWallPivot.object3D) {
-                outerWallPivot.object3D.rotation.set(0, THREE.MathUtils.degToRad(120), 0);
+                outerWallPivot.object3D.rotation.set(0, THREE.MathUtils.degToRad(75), 0);
                 console.log('Applied direct rotation');
             }
         }, 500);
@@ -227,15 +227,15 @@ function animateLayersReveal() {
                 easing: 'easeOutQuad'
             });
 
-            // Add sliding effect - REVERSED: Sumpfkalk (last layer, index 7) slides most toward center
+            // Add sliding effect - ALL layers slide toward room center in X direction (right)
             const currentPos = pivot.getAttribute('position');
-            // Reverse the sliding: index 7 (Sumpfkalk) gets +2.0, index 0 (Hanfbeton) gets -1.4
-            // Formula: (7-index) * 0.4 - 0.8 = slides from +2.0 to -1.4
-            const slideDistance = (7 - index) * 0.4 - 0.8;
+            // Sumpfkalk (index 7) slides most to the right toward room center
+            // Formula: index * 0.1 = slides from 0.0 (Hanfbeton) to +0.7 (Sumpfkalk)
+            const slideDistance = index * 0.1;
 
             pivot.setAttribute('animation__slide', {
                 property: 'position',
-                to: `${currentPos.x} ${currentPos.y} ${currentPos.z + slideDistance}`,
+                to: `${currentPos.x + slideDistance} ${currentPos.y} ${currentPos.z}`,
                 dur: 2000, // Same duration as door opening
                 easing: 'easeOutQuad',
                 delay: 500 // Start sliding 0.5 seconds after door starts opening
