@@ -253,6 +253,40 @@ function animateLayersReveal() {
     }, layerPivots.length * 800 + 2500);
 }
 
+// Check if player is looking at layers and show/hide text accordingly
+function checkLayerLookDirection() {
+    const cursor = document.querySelector('a-cursor');
+    if (!cursor || !wallCut) return; // Only check after wall is cut
+
+    const raycaster = cursor.components.raycaster;
+    const intersections = raycaster.intersections;
+
+    // Hide all layer texts first
+    const allLayerTexts = document.querySelectorAll('.layer-pivot a-text');
+    const allLayerPlanes = document.querySelectorAll('.layer-pivot a-plane');
+
+    allLayerTexts.forEach(text => text.setAttribute('visible', 'false'));
+    allLayerPlanes.forEach(plane => plane.setAttribute('visible', 'false'));
+
+    if (intersections.length > 0) {
+        // Check if looking at any material layer
+        const layerIntersection = intersections.find(hit =>
+            hit.object.el && hit.object.el.classList.contains('material-layer')
+        );
+
+        if (layerIntersection) {
+            // Find the parent layer-pivot and show its text
+            const layerPivot = layerIntersection.object.el.parentElement;
+            if (layerPivot && layerPivot.classList.contains('layer-pivot')) {
+                const layerText = layerPivot.querySelector('a-text');
+                const layerPlane = layerPivot.querySelector('a-plane');
+                if (layerText) layerText.setAttribute('visible', 'true');
+                if (layerPlane) layerPlane.setAttribute('visible', 'true');
+            }
+        }
+    }
+}
+
 // Check if player is looking at the cuttable wall
 function checkWallLookDirection() {
     const playerCam = document.querySelector('#playerCam');
@@ -300,6 +334,9 @@ function checkWallLookDirection() {
     if (wallCut && sawTarget) {
         sawTarget.setAttribute('visible', 'false');
     }
+
+    // Check layer visibility after wall is cut
+    checkLayerLookDirection();
 }
 
 // Room 6 saw system component
