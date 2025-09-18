@@ -66,25 +66,25 @@
              rotation="0 45 0"
              visible="true">
         <a-text position="0 0.5 0.01"
-                value="Welcome to VR Escape Room!"
+                value="Willkommen im Openly Escape Room!"
                 align="center"
                 color="#333333"
-                scale="0.8 0.8 0.8"></a-text>
+                scale="0.7 0.7 0.7"></a-text>
         <a-text position="0 0.1 0.01"
-                value="Use WASD keys or VR controllers to move"
+                value="WASD-Tasten oder VR-Controller zum Bewegen"
                 align="center"
                 color="#666666"
-                scale="0.5 0.5 0.5"></a-text>
+                scale="0.45 0.45 0.45"></a-text>
         <a-text position="0 -0.2 0.01"
-                value="Look around with mouse or head movement"
+                value="Umblicken mit Maus oder Kopfbewegung"
                 align="center"
                 color="#666666"
-                scale="0.5 0.5 0.5"></a-text>
+                scale="0.45 0.45 0.45"></a-text>
         <a-text position="0 -0.5 0.01"
-                value="Solve puzzles to escape each room!"
+                value="Loese Raetsel und lerne ueber Nachhaltigkeit!"
                 align="center"
                 color="#666666"
-                scale="0.5 0.5 0.5"></a-text>
+                scale="0.45 0.45 0.45"></a-text>
     </a-plane>
 
     <!-- START Button -->
@@ -95,24 +95,23 @@
            animation__mouseenter="startEvents: mouseenter; property: material.color; to: #00FF00; dur: 200"
            animation__mouseleave="startEvents: mouseleave; property: material.color; to: #00AA00; dur: 200">
         <a-text position="0 0 0.11"
-                value="START GAME"
+                value="SPIEL STARTEN"
                 align="center"
                 color="white"
                 scale="0.7 0.7 0.7"></a-text>
     </a-box>
 
-    <!-- Door to Room 1 (initially hidden and non-clickable) -->
-    <a-gltf-model id="door-room1" src="#doorModel"
+    <!-- Door to Main Room (initially hidden and non-clickable) -->
+    <a-gltf-model id="door-main" src="#doorModel"
                   position="0 0 -3.8"
                   scale="0.013 0.013 0.013"
                   rotation="0 0 0"
-                  data-target="./room1/room1.html"
+                  data-target="./main/main.html"
+                  class="door clickable"
                   visible="false"></a-gltf-model>
-    <a-text id="room1-label" position="0 2.8 -3.6" rotation="0 0 0" value="ROOM 1" align="center"
-            color="red" scale="1.0 1.0 1.0" visible="false"></a-text>
 
     <!-- Room Title -->
-    <a-text position="0 2.5 -3" value="ENTRANCE" align="center"
+    <a-text position="0 2.5 -3" value="EINGANG" align="center"
             color="black" scale="1.2 1.2 1.2"></a-text>
 
 
@@ -136,8 +135,8 @@
 
 
     <!-- UI Text (initially hidden) -->
-    <a-text id="message" position="0 2.8 2"
-            value="Great! Now you can enter Room 1.\nGood luck with your escape!"
+    <a-text id="message" position="0 2.8 -2.5"
+            value="Grossartig! Jetzt kannst du den Hauptraetselraum betreten.\nViel Glueck beim Entkommen!"
             align="center" color="cyan" scale="0.5 0.5 0.5" look-at="#playerCam"
             visible="false"></a-text>
 </a-scene>

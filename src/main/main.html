@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>VR Escape Room - Main Integrated Room</title>
+    <meta name="description" content="VR Escape Room Main Room - All Prototypes Integrated">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <!-- A-Frame -->
+    <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
+
+    <!-- A-Frame Extras (movement controls and collision) -->
+    <script src="../../aframe-extras/dist/aframe-extras.js"></script>
+    <script src="https://unpkg.com/aframe-look-at-component@1.0.0/dist/aframe-look-at-component.min.js"></script>
+
+    <script src="../shared/movement.js"></script>
+    <script src="../shared/components.js"></script>
+    <script src="main.js"></script>
+
+</head>
+<body>
+
+<!-- 2D overlay (works on PC; becomes DOM Overlay in VR where supported) -->
+<div id="ui" style="position:fixed; inset:0; pointer-events:none; z-index:9999; display:block;">
+  <div id="ui-panel" style="
+      position:fixed; left:20px; bottom:20px; width:380px; pointer-events:auto;
+      background:rgba(0,0,0,.85); color:#fff; padding:12px; border-radius:12px; font:14px/1.3 system-ui;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index:10000;">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <strong>Hauptraetsel - Integrierter Prototyp</strong>
+      <div>
+        <button id="scanBtn" style="padding:4px 8px; background:#007acc; color:white; border:none; border-radius:4px; cursor:pointer; margin-right:5px;">Scannen (E)</button>
+      </div>
+    </div>
+    <div id="tools">🔧 Scanner: Verfuegbar</div>
+    <div id="hand">📦 Leer</div>
+    <div id="materials">📊 Materialien gefunden: 0/8</div>
+    <div style="opacity:.8; font-size:12px;">Q = Fallen lassen | E = Scannen | Klick = Aufheben/Benutzen</div>
+  </div>
+</div>
+
+<a-scene background="color: #f0f0f0"
+         vr-mode-ui="enabled: true"
+         webxr="optionalFeatures: dom-overlay, local-floor; overlayElement: #ui">
+
+    <!-- Assets -->
+    <a-assets>
+        <a-asset-item id="table" src="../../models/office_table.glb"></a-asset-item>
+        <a-asset-item id="keyModel" src="../../models/key.glb"></a-asset-item>
+        <a-asset-item id="scannerModel" src="../../models/sci-fi_scanner.glb"></a-asset-item>
+        <a-asset-item id="lockedDoorModel" src="../../models/door_with_frame.glb"></a-asset-item>
+    </a-assets>
+
+    <!-- Lighting -->
+    <a-light type="ambient" color="#ffffff" intensity="0.9"></a-light>
+    <a-light type="directional" position="2 4 2" color="#ffffff" intensity="1.3"></a-light>
+    <a-light type="point" position="0 3 0" color="#ffffff" intensity="1.5" distance="25"></a-light>
+    <a-light type="point" position="8 2 8" color="#ffffff" intensity="0.8" distance="20"></a-light>
+    <a-light type="point" position="-8 2 -8" color="#ffffff" intensity="0.8" distance="20"></a-light>
+
+    <!-- Main Room Structure (20x20 for more space) -->
+    <a-box position="0 -0.05 0" width="20" height="0.1" depth="20"
+           material="color: #e0e0e0; roughness: 0.3"></a-box>
+    <a-box position="0 3.05 0" width="20" height="0.1" depth="20"
+           material="color: #f5f5f5; roughness: 0.2"></a-box>
+
+    <!-- Main Room Walls -->
+    <!-- North wall -->
+    <a-box position="0 1.5 -10" width="20" height="3" depth="0.3"
+           material="color: #d0d0d0; roughness: 0.4"></a-box>
+    <!-- South wall (with space for exit door) -->
+    <a-box position="-6 1.5 10" width="8" height="3" depth="0.3"
+           material="color: #d0d0d0; roughness: 0.4"></a-box>
+    <a-box position="6 1.5 10" width="8" height="3" depth="0.3"
+           material="color: #d0d0d0; roughness: 0.4"></a-box>
+    <!-- West wall -->
+    <a-box position="-10 1.5 0" width="0.3" height="3" depth="20"
+           material="color: #d0d0d0; roughness: 0.4"></a-box>
+    <!-- East wall -->
+    <a-box position="10 1.5 0" width="0.3" height="3" depth="20"
+           material="color: #d0d0d0; roughness: 0.4"></a-box>
+
+
+
+    <!-- Exit Door (locked initially, opens when puzzle completed) -->
+    <a-gltf-model id="exit-door" src="#lockedDoorModel"
+                  position="0 0 -9.5"
+                  scale="0.02 0.02 0.02"
+                  rotation="0 0 0"
+                  autocenter-gltf="ground: true"></a-gltf-model>
+    <a-text id="exit-text" position="0 2.5 -9" value="🔒 GESPERRTER AUSGANG" align="center"
+            color="red" scale="0.8 0.8 0.8"></a-text>
+    <a-text position="0 2 -9" value="Loese alle Raetsel!" align="center"
+            color="orange" scale="0.4 0.4 0.4"></a-text>
+
+    <!-- Work Table (positioned right like Room 2) -->
+    <a-entity gltf-model="#table" position="8 1 -1" rotation="0 90 0"
+              scale="0.06 0.02 0.02">
+    </a-entity>
+
+    <!-- Sorting spots on table (8 spots arranged vertically like materials - worst CO2 back to best CO2 front) -->
+    <!-- Spot 1: Worst CO2 -->
+    <a-cylinder id="spot1" position="9 1.05 -3" radius="0.25" height="0.05"
+                material="color: gray; opacity: 0.6"
+                class="sorting-spot"
+                data-correct-material="kupfer"></a-cylinder>
+
+    <!-- Spot 2 -->
+    <a-cylinder id="spot2" position="9 1.05 -2" radius="0.25" height="0.05"
+                material="color: gray; opacity: 0.6"
+                class="sorting-spot"
+                data-correct-material="holz"></a-cylinder>
+
+    <!-- Spot 3 -->
+    <a-cylinder id="spot3" position="9 1.05 -1" radius="0.25" height="0.05"
+                material="color: gray; opacity: 0.6"
+                class="sorting-spot"
+                data-correct-material="kork"></a-cylinder>
+
+    <!-- Spot 4 -->
+    <a-cylinder id="spot4" position="9 1.05 0" radius="0.25" height="0.05"
+                material="color: gray; opacity: 0.6"
+                class="sorting-spot"
+                data-correct-material="lehm"></a-cylinder>
+
+    <!-- Spot 5 -->
+    <a-cylinder id="spot5" position="9 1.05 1" radius="0.25" height="0.05"
+                material="color: gray; opacity: 0.6"
+                class="sorting-spot"
+                data-correct-material="sumpfkalk"></a-cylinder>
+
+    <!-- Spot 6 -->
+    <a-cylinder id="spot6" position="9 1.05 2" radius="0.25" height="0.05"
+                material="color: gray; opacity: 0.6"
+                class="sorting-spot"
+                data-correct-material="pflanzenkohle"></a-cylinder>
+
+    <!-- Spot 7 -->
+    <a-cylinder id="spot7" position="9 1.05 3" radius="0.25" height="0.05"
+                material="color: gray; opacity: 0.6"
+                class="sorting-spot"
+                data-correct-material="hanfziegel"></a-cylinder>
+
+    <!-- Spot 8: Best CO2 -->
+    <a-cylinder id="spot8" position="9 1.05 4" radius="0.25" height="0.05"
+                material="color: gray; opacity: 0.6"
+                class="sorting-spot"
+                data-correct-material="hanfbeton"></a-cylinder>
+
+    <!-- Labels for spots -->
+    <a-plane position="9.3 1.3 -3" width="1.2" height="0.35" material="color: #000000; opacity: 0.8" rotation="0 270 0">
+        <a-text position="0 0 0.01" value="SCHLECHTESTE CO2 BILANZ" align="center"
+                color="red" scale="0.25 0.25 0.25"></a-text>
+    </a-plane>
+    <a-plane position="9.3 1.3 0.5" width="1.2" height="0.35" material="color: #000000; opacity: 0.8" rotation="0 270 0">
+        <a-text position="0 0 0.01" value="MITTLERE CO2 BILANZ" align="center"
+                color="orange" scale="0.25 0.25 0.25"></a-text>
+    </a-plane>
+    <a-plane position="9.3 1.3 4" width="1.2" height="0.35" material="color: #000000; opacity: 0.8" rotation="0 270 0">
+        <a-text position="0 0 0.01" value="BESTE CO2 BILANZ" align="center"
+                color="green" scale="0.25 0.25 0.25"></a-text>
+    </a-plane>
+
+    <!-- Sorting Direction Indicator -->
+    <a-plane position="9.5 1.6 0.5" width="2" height="0.4" material="color: #222222; opacity: 0.9" rotation="0 270 0">
+        <a-text position="0 0.1 0.01" value="SORTIERE NACH CO2 BILANZ:" align="center"
+                color="white" scale="0.3 0.3 0.3"></a-text>
+        <a-text position="0 -0.1 0.01" value="SCHLECHT ← → GUT" align="center"
+                color="yellow" scale="0.35 0.35 0.35"></a-text>
+    </a-plane>
+
+    <!-- Scanner Tool (from Room 4) - moved to center -->
+    <a-entity id="scanner-group" position="0 1 -2" class="tool pickupable" data-tool="scanner">
+        <a-box id="scanner-trigger"
+               class="tool pickupable"
+               data-tool="scanner"
+               position="0 0 0"
+               width="1.5" height="1.5" depth="1.5"
+               material="color: cyan; opacity: 0"></a-box>
+        <a-gltf-model id="scanner"
+                      gltf-model="#scannerModel"
+                      scale="0.1 0.1 0.1"
+                      autocenter-gltf="ground: false"
+                      class="clickthrough"></a-gltf-model>
+    </a-entity>
+
+
+    <!-- All materials from Room 2 (8 total) arranged vertically along left wall -->
+    <!-- Material 1: Hanfbeton (best CO2) -->
+    <a-box id="material-hanfbeton" position="-9.5 0.25 4" width="0.5" height="0.5" depth="0.5"
+           material="color: #A0522D"
+           class="material pickupable scannable"
+           data-material="hanfbeton"
+           data-info="HANFBETON:\nCO2-positives Material\nErneuerbare Hanffasern\nNatuerlicher Kalkbinder\nAusgezeichnete Daemmung"></a-box>
+    <a-plane position="-9.2 0.8 4" width="0.8" height="0.25" material="color: #000000; opacity: 0.8" rotation="0 90 0">
+        <a-text position="0 0 0.01" value="Hanfbeton" align="center"
+                color="white" scale="0.4 0.4 0.4"></a-text>
+    </a-plane>
+
+    <!-- Material 2: Hanfziegel -->
+    <a-box id="material-hanfziegel" position="-9.5 0.25 3" width="0.5" height="0.5" depth="0.5"
+           material="color: #CD853F"
+           class="material pickupable scannable"
+           data-material="hanfziegel"
+           data-info="HANFZIEGEL:\nHanfbasierte Ziegel\nNiedriger Energieaufwand\nKlimaNeutral\nGute Daemmung"></a-box>
+    <a-plane position="-9.2 0.8 3" width="0.8" height="0.25" material="color: #000000; opacity: 0.8" rotation="0 90 0">
+        <a-text position="0 0 0.01" value="Hanfziegel" align="center"
+                color="white" scale="0.4 0.4 0.4"></a-text>
+    </a-plane>
+
+    <!-- Material 3: Holz -->
+    <a-box id="material-holz" position="-9.5 0.25 2" width="0.5" height="0.5" depth="0.5"
+           material="color: #8B4513"
+           class="material pickupable scannable"
+           data-material="holz"
+           data-info="HOLZ:\nErneuerbarer Rohstoff\nKohlenstoffspeicher\nBehandlung erforderlich\nMittlere Nachhaltigkeit"
+           visible="true"></a-box>
+    <a-plane position="-9.2 0.8 2" width="0.8" height="0.25" material="color: #000000; opacity: 0.8" rotation="0 90 0">
+        <a-text position="0 0 0.01" value="Holz" align="center"
+                color="white" scale="0.4 0.4 0.4"></a-text>
+    </a-plane>
+
+    <!-- Material 4: Kork -->
+    <a-box id="material-kork" position="-9.5 0.25 1" width="0.5" height="0.5" depth="0.5"
+           material="color: #DEB887"
+           class="material pickupable scannable"
+           data-material="kork"
+           data-info="KORK:\nErneuerbare Rindenernte\nNatuerliche Daemmung\nBiologisch abbaubar\nGeringer CO2-Einfluss"></a-box>
+    <a-plane position="-9.2 0.8 1" width="0.8" height="0.25" material="color: #000000; opacity: 0.8" rotation="0 90 0">
+        <a-text position="0 0 0.01" value="Kork" align="center"
+                color="white" scale="0.4 0.4 0.4"></a-text>
+    </a-plane>
+
+    <!-- Material 5: Pflanzenkohle Beton -->
+    <a-box id="material-pflanzenkohle" position="-9.5 0.25 0" width="0.5" height="0.5" depth="0.5"
+           material="color: #696969"
+           class="material pickupable scannable"
+           data-material="pflanzenkohle"
+           data-info="PFLANZENKOHLE BETON:\nKohlenstoffbindung\nBiokohle-Beton\nReduziert CO2\nInnovatives Material"></a-box>
+    <a-plane position="-9.2 0.8 0" width="0.8" height="0.25" material="color: #000000; opacity: 0.8" rotation="0 90 0">
+        <a-text position="0 0 0.01" value="Pflanzenkohle Beton" align="center"
+                color="white" scale="0.3 0.3 0.3"></a-text>
+    </a-plane>
+
+    <!-- Material 6: Kupfer -->
+    <a-box id="material-kupfer" position="-9.5 0.25 -1" width="0.5" height="0.5" depth="0.5"
+           material="color: #B87333"
+           class="material pickupable scannable"
+           data-material="kupfer"
+           data-info="KUPFER:\nHoher Energieaufwand\nRecycelbares Metall\nLange Haltbarkeit\nMittlerer CO2-Einfluss"></a-box>
+    <a-plane position="-9.2 0.8 -1" width="0.8" height="0.25" material="color: #000000; opacity: 0.8" rotation="0 90 0">
+        <a-text position="0 0 0.01" value="Kupfer" align="center"
+                color="white" scale="0.4 0.4 0.4"></a-text>
+    </a-plane>
+
+    <!-- Material 7: Lehm -->
+    <a-box id="material-lehm" position="-9.5 0.25 -2" width="0.5" height="0.5" depth="0.5"
+           material="color: #A0522D"
+           class="material pickupable scannable"
+           data-material="lehm"
+           data-info="LEHM:\nNatuerliches Tonmaterial\nNiedriger Energieaufwand\nAtmungsaktive Waende\nGeringer CO2-Fussabdruck"></a-box>
+    <a-plane position="-9.2 0.8 -2" width="0.8" height="0.25" material="color: #000000; opacity: 0.8" rotation="0 90 0">
+        <a-text position="0 0 0.01" value="Lehm" align="center"
+                color="white" scale="0.4 0.4 0.4"></a-text>
+    </a-plane>
+
+    <!-- Material 8: Sumpfkalk -->
+    <a-box id="material-sumpfkalk" position="-9.5 0.25 -3" width="0.5" height="0.5" depth="0.5"
+           material="color: #EEE8AA"
+           class="material pickupable scannable"
+           data-material="sumpfkalk"
+           data-info="SUMPFKALK:\nNatuerlicher Kalkmoertel\nCO2-Wiederaufnahme\nHistorisches Material\nKlimaneutraler Kreislauf"></a-box>
+    <a-plane position="-9.2 0.8 -3" width="0.8" height="0.25" material="color: #000000; opacity: 0.8" rotation="0 90 0">
+        <a-text position="0 0 0.01" value="Sumpfkalk" align="center"
+                color="white" scale="0.4 0.4 0.4"></a-text>
+    </a-plane>
+
+    <!-- Key (hidden initially, drops when sorting completed) -->
+    <a-gltf-model id="key" src="#keyModel"
+                  position="9 4 -1"
+                  scale="0.001 0.001 0.001"
+                  rotation="0 0 0"
+                  class="key pickupable"
+                  data-item="key"
+                  visible="false"
+                  autocenter-gltf="ground: false"></a-gltf-model>
+
+    <!-- VR Hand Controllers -->
+    <a-entity id="leftHand"
+              hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
+    <a-entity id="rightHand"
+              hand-controls="hand: right; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
+
+    <!-- Player Rig -->
+    <a-entity id="rig"
+              position="0 1.6 8"
+              movement-controls="controls: keyboard, touch"
+              simple-collision>
+        <a-entity id="playerCam" camera look-controls>
+            <a-cursor position="0 0 -1"
+                      geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                      material="color: white; shader: flat"
+                      raycaster="objects: .door, .tool, .material, .key, .sorting-spot, .placed-material; showLine: true"></a-cursor>
+
+            <!-- Scan Result Tooltip: now follows the camera -->
+            <a-plane id="scan-tooltip"
+                     position="0 -0.1 -1.2"
+                     width="2.2" height="1.2"
+                     material="color: #000000; opacity: 0.9"
+                     visible="false">
+                <a-text id="scan-info"
+                        position="0 0 0.01"
+                        value=""
+                        align="center"
+                        color="cyan"
+                        scale="0.3 0.3 0.3"></a-text>
+            </a-plane>
+        </a-entity>
+
+        <!-- World-space HUD fallback (hidden unless DOM Overlay is unavailable) -->
+        <a-entity id="world-hud" position="-1.2 -0.8 -1.8" visible="false">
+            <a-plane width="3" height="1.2" material="color: #333333; opacity: 0.85" position="0 0 0">
+                <a-text value="HAUPTRAETSEL - INTEGRIERTER PROTOTYP" position="0 0.4 0.01" align="center" color="white" scale="0.4 0.4 0.4"></a-text>
+                <a-text id="world-inventory-tools" value="🔧 Scanner: Verfuegbar" position="0 0.15 0.01" align="center" color="lime" scale="0.3 0.3 0.3"></a-text>
+                <a-text id="world-hand-content" value="📦 Leer" position="0 -0.05 0.01" align="center" color="gray" scale="0.3 0.3 0.3"></a-text>
+                <a-text id="world-materials" value="📊 Materialien gefunden: 0/8" position="0 -0.25 0.01" align="center" color="yellow" scale="0.3 0.3 0.3"></a-text>
+                <a-text value="Q = Fallen lassen | E = Scannen" position="0 -0.45 0.01" align="center" color="yellow" scale="0.25 0.25 0.25"></a-text>
+            </a-plane>
+        </a-entity>
+    </a-entity>
+
+    <!-- UI Message -->
+    <a-text id="message" position="0 2.5 3"
+            value="Willkommen im Openly Escape Room!\n1. Nimm den Scanner und scanne Materialien fuer Infos\n2. Sortiere alle 8 Materialien nach CO2-Bilanz (schlecht links → gut rechts)\n3. Hol dir den Schluessel wenn alle Materialien richtig sortiert sind!"
+            align="center" color="cyan" scale="0.6 0.6 0.6"
+            look-at="#playerCam"></a-text>
+</a-scene>
+
+<script>
+(function () {
+    const overlay = document.getElementById('ui');
+    const scene = document.querySelector('a-scene');
+    let isInVRWithoutDOMOverlay = false;
+    let vrHudVisible = false;
+
+    function showOverlay2D() {
+        if (overlay) {
+            overlay.style.display = 'block';
+        }
+    }
+    function hideOverlay2D() {
+        if (overlay) {
+            overlay.style.display = 'none';
+        }
+    }
+    function showWorldHud(v) {
+        const worldHud = document.getElementById('world-hud');
+        if (worldHud) {
+            worldHud.setAttribute('visible', !!v);
+        }
+    }
+    function toggleVRInventory() {
+        if (isInVRWithoutDOMOverlay) {
+            vrHudVisible = !vrHudVisible;
+            showWorldHud(vrHudVisible);
+        }
+    }
+
+    // Initialize immediately for desktop
+    showOverlay2D();
+
+    if (scene) {
+        scene.addEventListener('loaded', () => {
+            showOverlay2D();
+            showWorldHud(false);
+        });
+
+        scene.addEventListener('enter-vr', () => {
+            const session = scene.renderer?.xr?.getSession?.();
+            const domOverlayActive = !!(session && session.domOverlayState);
+
+            if (domOverlayActive) {
+                showOverlay2D();
+                showWorldHud(false);
+                isInVRWithoutDOMOverlay = false;
+            } else {
+                hideOverlay2D();
+                showWorldHud(false);
+                isInVRWithoutDOMOverlay = true;
+                vrHudVisible = false;
+            }
+        });
+
+        scene.addEventListener('exit-vr', () => {
+            showOverlay2D();
+            showWorldHud(false);
+            isInVRWithoutDOMOverlay = false;
+        });
+    }
+
+    // Wire desktop buttons to game logic
+    document.getElementById('scanBtn')?.addEventListener('click', () => {
+        document.dispatchEvent(new KeyboardEvent('keydown', {key: 'e'}));
+    });
+
+
+    // VR inventory toggle
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'i' || event.key === 'I') {
+            toggleVRInventory();
+        }
+    });
+})();
+</script>
+</body>
+</html>

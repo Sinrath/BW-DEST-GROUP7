@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>VR Escape Room - Completion</title>
+    <meta name="description" content="VR Escape Room Completion - Prototype Showcase">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <!-- A-Frame -->
+    <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
+
+    <!-- A-Frame Extras (movement controls and collision) -->
+    <script src="../../aframe-extras/dist/aframe-extras.js"></script>
+    <script src="https://unpkg.com/aframe-look-at-component@1.0.0/dist/aframe-look-at-component.min.js"></script>
+
+    <script src="../shared/movement.js"></script>
+    <script src="end.js"></script>
+
+</head>
+<body>
+
+<a-scene background="color: #000810"
+         vr-mode-ui="enabled: true">
+
+    <!-- Assets -->
+    <a-assets>
+        <a-asset-item id="trophy" src="../../models/trophy.glb"></a-asset-item>
+    </a-assets>
+
+    <!-- Lighting for celebration -->
+    <a-light type="ambient" color="#ffffff" intensity="0.5"></a-light>
+    <a-light type="directional" position="2 4 2" color="#gold" intensity="1.5"></a-light>
+    <a-light type="point" position="0 3 0" color="#FFD700" intensity="2" distance="15"></a-light>
+    <a-light type="point" position="5 2 5" color="#FF69B4" intensity="1.2" distance="10"></a-light>
+    <a-light type="point" position="-5 2 -5" color="#00FFFF" intensity="1.2" distance="10"></a-light>
+
+    <!-- Celebration Platform -->
+    <a-cylinder position="0 -0.1 0" radius="6" height="0.2"
+                material="color: #FFD700; metalness: 0.8; roughness: 0.2"></a-cylinder>
+    <a-cylinder position="0 -0.05 0" radius="5.5" height="0.1"
+                material="color: #FFA500; metalness: 0.6; roughness: 0.3"></a-cylinder>
+
+    <!-- Trophy -->
+    <a-gltf-model id="celebration-trophy" src="#trophy"
+                  position="0 1.5 0"
+                  scale="0.1 0.1 0.1"
+                  rotation="0 0 0"
+                  animation="property: rotation; to: 0 360 0; loop: true; dur: 8000"
+                  autocenter-gltf="ground: true"></a-gltf-model>
+
+    <!-- Celebration Text -->
+    <a-text position="0 3.5 0" value="🎉 CONGRATULATIONS! 🎉" align="center"
+            color="#FFD700" scale="2 2 2" font="roboto"
+            animation="property: scale; to: 2.2 2.2 2.2; dir: alternate; loop: true; dur: 1500"
+            look-at="#playerCam"></a-text>
+
+    <a-text position="0 2.8 0" value="PROTOTYPE INTEGRATION COMPLETE" align="center"
+            color="#00FF00" scale="1.2 1.2 1.2" font="roboto"
+            look-at="#playerCam"></a-text>
+
+    <!-- Achievement List -->
+    <a-plane position="0 1.8 -2" width="8" height="4" material="color: #000066; opacity: 0.9">
+        <a-text position="0 1.5 0.01" value="🏆 ACHIEVEMENTS UNLOCKED 🏆" align="center"
+                color="#FFD700" scale="1.2 1.2 1.2" font="roboto"></a-text>
+
+        <a-text position="0 0.8 0.01" value="✅ Scanner Prototype - Material Analysis System" align="center"
+                color="#00FF00" scale="0.8 0.8 0.8"></a-text>
+
+        <a-text position="0 0.4 0.01" value="✅ Sorting Prototype - Sustainability Assessment" align="center"
+                color="#00FF00" scale="0.8 0.8 0.8"></a-text>
+
+        <a-text position="0 0 0.01" value="✅ Saw Prototype - Interactive Wall Cutting" align="center"
+                color="#00FF00" scale="0.8 0.8 0.8"></a-text>
+
+        <a-text position="0 -0.4 0.01" value="✅ Layer Visualization - Material Layer Display" align="center"
+                color="#00FF00" scale="0.8 0.8 0.8"></a-text>
+
+        <a-text position="0 -0.8 0.01" value="✅ Integration Success - All Systems Combined" align="center"
+                color="#00FF00" scale="0.8 0.8 0.8"></a-text>
+
+        <a-text position="0 -1.3 0.01" value="🎯 READY FOR DEPLOYMENT!" align="center"
+                color="#FF6600" scale="1 1 1" font="roboto"></a-text>
+    </a-plane>
+
+    <!-- Navigation Links -->
+    <a-plane position="-4 0.5 -3" width="3" height="2" material="color: #333333; opacity: 0.9">
+        <a-text position="0 0.6 0.01" value="🔗 PROTOTYPE LINKS" align="center"
+                color="#FFFF00" scale="0.8 0.8 0.8"></a-text>
+
+        <a-text position="0 0.2 0.01" value="Room 1: Key Finding" align="center"
+                color="#CCCCCC" scale="0.5 0.5 0.5"></a-text>
+        <a-box position="0 0.2 0.02" width="2.8" height="0.3" depth="0.02"
+               material="color: #4A4A4A" class="door" data-target="../room1/room1.html"></a-box>
+
+        <a-text position="0 -0.1 0.01" value="Room 2: Material Display" align="center"
+                color="#CCCCCC" scale="0.5 0.5 0.5"></a-text>
+        <a-box position="0 -0.1 0.02" width="2.8" height="0.3" depth="0.02"
+               material="color: #4A4A4A" class="door" data-target="../room2/room2.html"></a-box>
+
+        <a-text position="0 -0.4 0.01" value="Room 3: Wood Pickup" align="center"
+                color="#CCCCCC" scale="0.5 0.5 0.5"></a-text>
+        <a-box position="0 -0.4 0.02" width="2.8" height="0.3" depth="0.02"
+               material="color: #4A4A4A" class="door" data-target="../room3/room3.html"></a-box>
+
+        <a-text position="0 -0.7 0.01" value="Room 4: Scanner System" align="center"
+                color="#CCCCCC" scale="0.5 0.5 0.5"></a-text>
+        <a-box position="0 -0.7 0.02" width="2.8" height="0.3" depth="0.02"
+               material="color: #4A4A4A" class="door" data-target="../room4/room4.html"></a-box>
+    </a-plane>
+
+    <a-plane position="4 0.5 -3" width="3" height="2" material="color: #333333; opacity: 0.9">
+        <a-text position="0 0.6 0.01" value="🔗 MORE PROTOTYPES" align="center"
+                color="#FFFF00" scale="0.8 0.8 0.8"></a-text>
+
+        <a-text position="0 0.2 0.01" value="Room 5: Material Sorting" align="center"
+                color="#CCCCCC" scale="0.5 0.5 0.5"></a-text>
+        <a-box position="0 0.2 0.02" width="2.8" height="0.3" depth="0.02"
+               material="color: #4A4A4A" class="door" data-target="../room5/room5.html"></a-box>
+
+        <a-text position="0 -0.1 0.01" value="Room 6: Wall Cutting" align="center"
+                color="#CCCCCC" scale="0.5 0.5 0.5"></a-text>
+        <a-box position="0 -0.1 0.02" width="2.8" height="0.3" depth="0.02"
+               material="color: #4A4A4A" class="door" data-target="../room6/room6.html"></a-box>
+
+        <a-text position="0 -0.4 0.01" value="Main: Integrated Experience" align="center"
+                color="#CCCCCC" scale="0.5 0.5 0.5"></a-text>
+        <a-box position="0 -0.4 0.02" width="2.8" height="0.3" depth="0.02"
+               material="color: #00AA00" class="door" data-target="../main/main.html"></a-box>
+
+        <a-text position="0 -0.7 0.01" value="Start Over: Entrance" align="center"
+                color="#CCCCCC" scale="0.5 0.5 0.5"></a-text>
+        <a-box position="0 -0.7 0.02" width="2.8" height="0.3" depth="0.02"
+               material="color: #FF6600" class="door" data-target="../entrance.html"></a-box>
+    </a-plane>
+
+    <!-- VR Hand Controllers -->
+    <a-entity id="leftHand"
+              hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
+    <a-entity id="rightHand"
+              hand-controls="hand: right; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
+
+    <!-- Player Rig -->
+    <a-entity id="rig"
+              position="0 1.6 6"
+              movement-controls="controls: keyboard, touch"
+              simple-collision>
+        <a-entity id="playerCam" camera look-controls>
+            <a-cursor position="0 0 -1"
+                      geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                      material="color: white; shader: flat"
+                      raycaster="objects: .door; showLine: true"></a-cursor>
+        </a-entity>
+    </a-entity>
+
+    <!-- Floating celebration particles -->
+    <a-entity id="particles" position="0 3 0"></a-entity>
+
+    <!-- Thank you message -->
+    <a-text position="0 -1 2"
+            value="Thank you for testing our integrated VR prototype!\nAll individual room prototypes are now accessible above.\nThis demonstrates successful integration of all key features."
+            align="center" color="#AAAAAA" scale="0.6 0.6 0.6"
+            look-at="#playerCam"></a-text>
+
+</a-scene>
+</body>
+</html>
