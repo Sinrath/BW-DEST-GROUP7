@@ -1,6 +1,126 @@
 // Main Integrated Room - Combines all prototype functions
 // Room 4: Scanner + materials, Room 5: Sorting
 
+// Simplified material facts for scanner
+const MATERIAL_FACTS = {
+  kupfer: [
+    "KUPFER:",
+    "Sehr hohe CO₂-Belastung bei Gewinnung",
+    "Recycelbar, aber energieintensiv"
+  ].join("\n"),
+
+  holz: [
+    "HOLZ:",
+    "Speichert CO₂ (nachwachsend)",
+    "Mittelmässige CO₂-Bilanz"
+  ].join("\n"),
+
+  kork: [
+    "KORK:",
+    "Natürlich & erneuerbar",
+    "Gute Dämmung, mittlere CO₂-Bilanz"
+  ].join("\n"),
+
+  lehm: [
+    "LEHM:",
+    "Geringe CO₂-Belastung",
+    "Reguliert Feuchtigkeit im Raum"
+  ].join("\n"),
+
+  sumpfkalk: [
+    "SUMPFKALK:",
+    "Nimmt CO₂ wieder auf",
+    "Traditionelles Baumaterial"
+  ].join("\n"),
+
+  pflanzenkohle: [
+    "PFLANZENKOHLE-BETON:",
+    "Innovative Technologie",
+    "Bindet zusätzlich CO₂"
+  ].join("\n"),
+
+  hanfziegel: [
+    "HANFZIEGEL:",
+    "Fast CO₂-neutral",
+    "Leicht & gut dämmend"
+  ].join("\n"),
+
+  hanfbeton: [
+    "HANFBETON:",
+    "Sehr gute CO₂-Bilanz (negativ!)",
+    "Dämmend & atmungsaktiv"
+  ].join("\n")
+};
+
+// Detailed technical facts (from openly.systems)
+const DETAILED_MATERIAL_FACTS = {
+  hanfbeton: [
+    "HANFBETON (Hemplime / CANCRETE)",
+    "Netto CO₂-Bilanz: ca. -100 kg/m³",
+    "Diffusionsoffen, sehr gute Dämmung"
+  ].join("\n"),
+
+  hanfziegel: [
+    "HANFZIEGEL (Schönthaler / CANCRETE)",
+    "CO₂: -0.22 kg CO₂e/kg",
+    "Speicherung: bis ~236 kg CO₂/m³",
+    "Nicht tragend; mit Holzständer einsetzen"
+  ].join("\n"),
+
+  holz: [
+    "HOLZ (Konstruktionsholz)",
+    "Herstellung: ~80 kg CO₂/m³",
+    "Netto-negativ möglich: ca. -727 kg CO₂/m³",
+    "Hohe Tragfähigkeit bei geringem Eigengewicht"
+  ].join("\n"),
+
+  kork: [
+    "KORK",
+    "CO₂-Capturing:",
+    "expandierter Kork ~180 kg/m³",
+    "Korkplatten ~716 kg/m³",
+  ].join("\n"),
+
+  pflanzenkohle: [
+    "PFLANZENKOHLE-BETON:",
+    "Signifikante CO₂-Senke über Biochar im Beton",
+    "Richtwert: >100 kg CO₂ Senkenleistung pro m³",
+    "Industriell skaliert mit CarStorCon"
+  ].join("\n"),
+
+  kupfer: [
+    "KUPFER:",
+    "Primär-Kupfer: ~2.21 kg CO₂/kg",
+    "Blech 3 mm: ~59 kg CO₂/m²",
+    "Rohr 1/2\": ~0.66 kg CO₂/m²"
+  ].join("\n"),
+
+  lehm: [
+    "LEHM",
+    "Lehm-Bauplatten: ~23.37 kg CO₂/m³",
+    "Lehmputz: ~98.62 kg CO₂/m³",
+    "A1 nach EN 13501-1"
+  ].join("\n"),
+
+  sumpfkalk: [
+    "SUMPFKALK:",
+    "Kalk bindet CO₂ durch Karbonatisieren",
+    "Konkrete Zahlen: Noch nicht Aktuell in Openly."
+  ].join("\n")
+};
+
+// Track last scanned element for re-scanning
+let lastScannedEl = null;
+
+// On load, push simple facts into the scene (detailed facts are accessed directly)
+function applyMaterialFacts() {
+  Object.entries(MATERIAL_FACTS).forEach(([key, text]) => {
+    const el = document.querySelector(`#material-${key}`);
+    if (el) el.setAttribute("data-info", text);
+  });
+}
+
+
 // Global state (following Room 4 and Room 5 patterns)
 let hasScanner = false;
 let isHoldingMaterial = false;
@@ -60,7 +180,7 @@ function updateHandUI() {
 }
 
 function updateMaterialsUI() {
-    const materialsText = `📊 Materials Found: ${materialsSorted}/8`;
+    const materialsText = `📊 Richtig sortiert: ${materialsSorted}/8`;
 
     // Update HTML overlay
     const htmlMaterials = document.querySelector('#materials');
@@ -112,7 +232,7 @@ function handleScannerPickup(event) {
 }
 
 // Scanning functionality (from Room 4)
-function scanMaterial() {
+function scanMaterial(useDetailedInfo = false) {
     if (!hasScanner) {
         const message = document.querySelector('#message');
         if (message) {
@@ -133,22 +253,29 @@ function scanMaterial() {
 
             if (materialIntersection) {
                 const material = materialIntersection.object.el;
-                const materialInfo = material.getAttribute('data-info');
+                lastScannedEl = material; // Remember this for detail toggle
                 const materialType = material.getAttribute('data-material');
 
-                console.log('Scanning material:', materialType);
+                // Get the appropriate info based on scan type
+                const facts = useDetailedInfo ? DETAILED_MATERIAL_FACTS : MATERIAL_FACTS;
+                const materialInfo = facts[materialType] || material.getAttribute('data-info');
+
+                console.log('Scanning material:', materialType, useDetailedInfo ? '(detailed)' : '(normal)');
 
                 // Show scan info tooltip
                 const scanTooltip = document.querySelector('#scan-tooltip');
                 const scanInfo = document.querySelector('#scan-info');
                 if (scanTooltip && scanInfo) {
-                    scanInfo.setAttribute('value', `SCAN RESULT:\n${materialInfo}`);
+                    const infoMode = useDetailedInfo ? 'DETAILINFO' : 'EINFACH';
+                    const scanResult = `SCAN RESULT (${infoMode}):\n\n${materialInfo}`;
+                    scanInfo.setAttribute('value', scanResult);
                     scanTooltip.setAttribute('visible', 'true');
 
-                    // Hide after 7 seconds
+                    // Hide after 8 seconds for normal, 12 seconds for detailed
+                    const displayTime = useDetailedInfo ? 12000 : 8000;
                     setTimeout(() => {
                         scanTooltip.setAttribute('visible', 'false');
-                    }, 7000);
+                    }, displayTime);
                 }
 
                 // Update message
@@ -463,8 +590,12 @@ function dropKey() {
     const key = document.querySelector('#key');
     if (key) {
         key.setAttribute('visible', 'true');
-        key.setAttribute('position', '6 1.1 -1'); // Drop on table
-        key.setAttribute('scale', '0.02 0.02 0.02');
+        key.setAttribute('animation', 'property: position; to: 7.5 1.5 0.5; dur: 1000; easing: easeInOutQuad');
+
+        // Ensure position is properly set after animation
+        setTimeout(() => {
+            key.setAttribute('position', '7.5 1.5 0.5');
+        }, 1100);
 
         // Add celebration confetti effect
         setTimeout(() => {
@@ -482,7 +613,7 @@ function handleKeyPickup(event) {
         hasKey = true;
         const message = document.querySelector('#message');
         if (message) {
-            message.setAttribute('value', 'Key acquired! Puzzle completed!');
+            message.setAttribute('value', 'Schluessel erhalten! Raetsel geloest! Der Ausgang ist nun freigeschaltet - klicke auf die Tuer!');
         }
         completePuzzle();
     }
@@ -500,12 +631,20 @@ function completePuzzle() {
 
     if (exitDoor) {
         exitDoor.setAttribute('material', 'color: green');
-        exitDoor.setAttribute('class', 'door');
+        exitDoor.setAttribute('class', 'door clickable');
         exitDoor.setAttribute('data-target', '../end/end.html');
+
+        // Add click listener for navigation (similar to entrance.js)
+        exitDoor.addEventListener('click', () => {
+            const target = exitDoor.getAttribute('data-target');
+            if (target) {
+                window.location.href = target;
+            }
+        });
     }
 
     if (exitText) {
-        exitText.setAttribute('value', '🔓 EXIT UNLOCKED');
+        exitText.setAttribute('value', '🔓 AUSGANG FREIGESCHALTET');
         exitText.setAttribute('color', 'green');
     }
 
@@ -555,6 +694,7 @@ function updateMessage(text) {
 AFRAME.registerComponent('main-integrated', {
     init: function () {
         setTimeout(() => {
+            applyMaterialFacts();   // Apply real CO2 data to materials
             this.addEventListeners();
         }, 100);
     },
@@ -588,7 +728,11 @@ AFRAME.registerComponent('main-integrated', {
         document.addEventListener('keydown', (event) => {
             if (event.key === 'e' || event.key === 'E') {
                 event.preventDefault();
-                scanMaterial();
+                scanMaterial(false); // Normal scan
+            }
+            if (event.key === 'r' || event.key === 'R') {
+                event.preventDefault();
+                scanMaterial(true); // Detailed scan
             }
             if (event.key === 'q' || event.key === 'Q') {
                 event.preventDefault();
