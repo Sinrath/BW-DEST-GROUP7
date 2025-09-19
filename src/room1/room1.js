@@ -18,10 +18,7 @@ function handleScannerPickup(event) {
         hasScanner = true;
         
         // Update UI message
-        const message = document.querySelector('#message');
-        if (message) {
-            message.setAttribute('value', 'Scanner acquired! Click on materials to analyze them.');
-        }
+        MessageUtils.updateMessage('Scanner acquired! Click on materials to analyze them.');
         
         // Visual feedback
         scanner.setAttribute('animation', 'property: scale; to: 0.12 0.12 0.12; dur: 200; dir: alternate');
@@ -62,32 +59,18 @@ function handleMaterialScan(event) {
         material.setAttribute('animation', `property: scale; to: ${newScale}; dur: 500; dir: alternate`);
         
     } else {
-        // No scanner message
-        const message = document.querySelector('#message');
-        if (message) {
-            message.setAttribute('value', 'You need the scanner first! Look around the room.');
-        }
-        
-        // Reset message after 3 seconds
-        setTimeout(() => {
-            const msg = document.querySelector('#message');
-            if (msg) {
-                msg.setAttribute('value', 'Find the scanner and analyze the materials');
-            }
-        }, 3000);
+        // No scanner message with auto-reset
+        MessageUtils.updateMessageWithReset(
+            'You need the scanner first! Look around the room.',
+            'Find the scanner and analyze the materials'
+        );
     }
 }
 
 // Extend the shared room-navigation to add scanner and material interactions
-AFRAME.registerComponent('room1-puzzles', {
-    init: function () {
-        // Wait for shared navigation to be ready
-        setTimeout(() => {
-            this.addPuzzleListeners();
-        }, 100);
-    },
-
-    addPuzzleListeners: function () {
+AFRAME.registerComponent('room1-puzzles', ComponentFactory.createRoomComponent(
+    'room1-puzzles',
+    function addPuzzleListeners() {
         // Add click listeners for scanner pickup
         const scanner = document.querySelector('#scanner');
         if (scanner) {
@@ -100,12 +83,7 @@ AFRAME.registerComponent('room1-puzzles', {
             material.addEventListener('click', handleMaterialScan);
         });
     }
-});
+));
 
 // Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    const scene = document.querySelector('a-scene');
-    if (scene) {
-        scene.setAttribute('room1-puzzles', '');
-    }
-});
+DOMUtils.initializeComponent('room1-puzzles');

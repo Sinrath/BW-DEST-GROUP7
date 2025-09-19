@@ -10,31 +10,20 @@ function handleMaterialClick(event) {
         console.log('Material clicked:', materialName);
         
         // Visual feedback - make material glow briefly
-        material.setAttribute('animation', 'property: material.emissive; to: #ffffff; dur: 300; dir: alternate');
+        AnimationUtils.emissiveAnimation(material, '#ffffff');
         
-        // Update message
-        const message = document.querySelector('#message');
-        if (message) {
-            message.setAttribute('value', `Material selected: ${materialName}\n\nArrange materials by sustainability on the table.`);
-            
-            // Reset message after 3 seconds
-            setTimeout(() => {
-                message.setAttribute('value', 'Willkommen zum Materialraum!\n\nOrdne die von Openly verwendeten Baumaterialien entsprechend ihrer Nachhaltigkeit auf dem Tisch an.\n\nHinweise dazu findest du in den Waenden.');
-            }, 3000);
-        }
+        // Update message with auto-reset
+        MessageUtils.updateMessageWithReset(
+            `Material selected: ${materialName}\n\nArrange materials by sustainability on the table.`,
+            'Willkommen zum Materialraum!\n\nOrdne die von Openly verwendeten Baumaterialien entsprechend ihrer Nachhaltigkeit auf dem Tisch an.\n\nHinweise dazu findest du in den Waenden.'
+        );
     }
 }
 
 // Extend the shared room-navigation to add material interactions
-AFRAME.registerComponent('room2-materials', {
-    init: function () {
-        // Wait for shared navigation to be ready
-        setTimeout(() => {
-            this.addMaterialListeners();
-        }, 100);
-    },
-
-    addMaterialListeners: function () {
+AFRAME.registerComponent('room2-materials', ComponentFactory.createRoomComponent(
+    'room2-materials',
+    function addMaterialListeners() {
         // Add click listeners to building materials
         const materials = document.querySelectorAll('a-box[color]');
         materials.forEach(material => {
@@ -42,12 +31,7 @@ AFRAME.registerComponent('room2-materials', {
             material.classList.add('material');
         });
     }
-});
+));
 
 // Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    const scene = document.querySelector('a-scene');
-    if (scene) {
-        scene.setAttribute('room2-materials', '');
-    }
-});
+DOMUtils.initializeComponent('room2-materials');

@@ -84,7 +84,7 @@ function handleDoorClick(event) {
         console.log('Navigating to:', targetRoom);
         
         // Visual feedback
-        door.setAttribute('animation', 'property: material.color; to: #00FF00; dur: 200; dir: alternate');
+        AnimationUtils.colorAnimation(door, '#00FF00');
         
         // Navigate after short delay for visual feedback
         setTimeout(() => {
@@ -94,9 +94,4 @@ function handleDoorClick(event) {
 }
 
 // Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    const scene = document.querySelector('a-scene');
-    if (scene) {
-        scene.setAttribute('room-navigation', '');
-    }
-});
+DOMUtils.initializeComponent('room-navigation');
