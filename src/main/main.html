@@ -58,7 +58,7 @@
     <a-light type="point" position="8 2 8" color="#ffffff" intensity="0.8" distance="20"></a-light>
     <a-light type="point" position="-8 2 -8" color="#ffffff" intensity="0.8" distance="20"></a-light>
 
-    <!-- Main Room Structure (20x20 for more space) -->
+    <!-- Main Room Structure -->
     <a-box position="0 -0.05 0" width="20" height="0.1" depth="20"
            material="color: #e0e0e0; roughness: 0.3"></a-box>
     <a-box position="0 3.05 0" width="20" height="0.1" depth="20"
@@ -84,11 +84,10 @@
 
     <!-- Exit Door (locked initially, opens when puzzle completed) -->
     <a-gltf-model id="exit-door" src="#lockedDoorModel"
-                  position="0 0 -9.5"
-                  scale="0.02 0.02 0.02"
+                  position="0 1.35 -9.8"
+                  scale="0.013 0.013 0.013"
                   rotation="0 0 0"
                   data-target="../end/end.html"
-                  class="door"
                   autocenter-gltf="ground: true"></a-gltf-model>
     <a-text id="exit-text" position="0 2.5 -9" value="🔒 GESPERRTER AUSGANG" align="center"
             color="red" scale="0.8 0.8 0.8"></a-text>

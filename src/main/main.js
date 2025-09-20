@@ -231,7 +231,7 @@ function handleScannerPickup(event) {
     }
 }
 
-// Scanning functionality (from Room 4)
+// Scanning functionality
 function scanMaterial(useDetailedInfo = false) {
     if (!hasScanner) {
         const message = document.querySelector('#message');
@@ -271,8 +271,8 @@ function scanMaterial(useDetailedInfo = false) {
                     scanInfo.setAttribute('value', scanResult);
                     scanTooltip.setAttribute('visible', 'true');
 
-                    // Hide after 8 seconds for normal, 12 seconds for detailed
-                    const displayTime = useDetailedInfo ? 12000 : 8000;
+                    // Hide after 4 seconds for normal, 6 seconds for detailed
+                    const displayTime = useDetailedInfo ? 4500 : 3000;
                     setTimeout(() => {
                         scanTooltip.setAttribute('visible', 'false');
                     }, displayTime);
@@ -297,7 +297,7 @@ function scanMaterial(useDetailedInfo = false) {
     }
 }
 
-// Material pickup functionality (from Room 4)
+// Material pickup functionality
 function handleMaterialPickup(event) {
     const material = event.target;
     const materialType = material.getAttribute('data-material');
@@ -344,7 +344,7 @@ function handleMaterialPickup(event) {
     }
 }
 
-// Material drop functionality (from Room 4)
+// Material drop functionality
 function handleMaterialDrop(event) {
     if (isHoldingMaterial) {
         const heldMaterial = document.querySelector('#held-material');
@@ -405,7 +405,7 @@ function handleMaterialDrop(event) {
     }
 }
 
-// Sorting spot interaction (from Room 5)
+// Sorting spot interaction
 function handleSortingSpot(event) {
     const spot = event.target;
     const spotId = spot.getAttribute('id');
@@ -490,7 +490,7 @@ function handleSortingSpot(event) {
     }
 }
 
-// Handle clicking on placed materials to pick them back up (from Room 5)
+// Handle clicking on placed materials to pick them back up
 function handlePlacedMaterialClick(event) {
     if (isHoldingMaterial) {
         return; // Already holding something
@@ -585,7 +585,7 @@ function updateSpotColors() {
     }
 }
 
-// Key drop and pickup (from Room 5)
+// Key drop and pickup
 function dropKey() {
     const key = document.querySelector('#key');
     if (key) {
@@ -694,7 +694,7 @@ function updateMessage(text) {
 AFRAME.registerComponent('main-integrated', {
     init: function () {
         setTimeout(() => {
-            applyMaterialFacts();   // Apply real CO2 data to materials
+            applyMaterialFacts();
             this.addEventListeners();
         }, 100);
     },
