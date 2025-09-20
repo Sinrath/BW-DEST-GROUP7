@@ -57,29 +57,9 @@
     <a-box position="8 1.5 0" width="0.3" height="3" depth="16"
            material="color: #d0d0d0; roughness: 0.4"></a-box>
 
-    <!-- Door back to Room 1 -->
-    <a-box id="door-room1" position="-2 1.5 8" width="1.5" height="2.5"
-           depth="0.3"
-           material="color: #4A4A4A; roughness: 0.3"
-           class="door" data-target="../room1/room1.html"></a-box>
-    <a-text position="-2 2.8 7.8" rotation="0 180 0" value="← ROOM 1"
-            align="center"
-            color="red" scale="0.8 0.8 0.8"></a-text>
-    <a-text position="-2 2.3 7.8" rotation="0 180 0" value="(Back)"
-            align="center"
-            color="white" scale="0.4 0.4 0.4"></a-text>
-
-    <!-- Door to Room 3 -->
-    <a-box id="door-room3" position="2 1.5 8" width="1.5" height="2.5"
-           depth="0.3"
-           material="color: #4A4A4A; roughness: 0.3"
-           class="door" data-target="../room3/room3.html"></a-box>
-    <a-text position="2 2.8 7.8" rotation="0 180 0" value="ROOM 3 →"
-            align="center"
-            color="red" scale="0.8 0.8 0.8"></a-text>
-    <a-text position="2 2.3 7.8" rotation="0 180 0" value="(Next)"
-            align="center"
-            color="white" scale="0.4 0.4 0.4"></a-text>
+    <!-- Wall (replaced doors) -->
+    <a-box position="0 1.5 8" width="8" height="3" depth="0.3"
+           material="color: #d0d0d0; roughness: 0.4"></a-box>
 
     <!-- Room Title -->
     <a-text position="0 2.5 -7" value="RAUM 2" align="center"
