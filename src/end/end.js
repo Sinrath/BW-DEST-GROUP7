@@ -6,11 +6,11 @@ function createCelebrationParticles() {
     if (!particlesContainer) return;
 
     // Create multiple particle systems
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 45; i++) {
         const particle = document.createElement('a-sphere');
 
         // Random starting position in a circle around the trophy
-        const angle = (i / 30) * Math.PI * 2;
+        const angle = (i / 45) * Math.PI * 2;
         const radius = 2 + Math.random() * 2;
         const x = Math.cos(angle) * radius;
         const z = Math.sin(angle) * radius;
@@ -51,48 +51,6 @@ function createCelebrationParticles() {
     }
 }
 
-// Create sparkle effects around the trophy
-function createSparkles() {
-    setInterval(() => {
-        const sparkle = document.createElement('a-sphere');
-
-        // Position around trophy
-        const x = (Math.random() - 0.5) * 2;
-        const y = 1 + Math.random() * 2;
-        const z = (Math.random() - 0.5) * 2;
-
-        sparkle.setAttribute('position', `${x} ${y} ${z}`);
-        sparkle.setAttribute('radius', 0.02);
-        sparkle.setAttribute('material', 'color: #FFD700; emissive: #FFD700; emissiveIntensity: 1');
-
-        // Fade out and rise animation
-        sparkle.setAttribute('animation__fade', {
-            property: 'material.opacity',
-            from: 1,
-            to: 0,
-            dur: 2000,
-            easing: 'easeOutQuad'
-        });
-
-        sparkle.setAttribute('animation__rise', {
-            property: 'position',
-            to: `${x} ${y + 1} ${z}`,
-            dur: 2000,
-            easing: 'easeOutQuad'
-        });
-
-        document.querySelector('a-scene').appendChild(sparkle);
-
-        // Remove after animation
-        setTimeout(() => {
-            if (sparkle.parentNode) {
-                sparkle.parentNode.removeChild(sparkle);
-            }
-        }, 2500);
-
-    }, 200); // New sparkle every 200ms
-}
-
 // Completion celebration component
 AFRAME.registerComponent('completion-celebration', {
     init: function () {
@@ -107,8 +65,7 @@ AFRAME.registerComponent('completion-celebration', {
         // Create particle effects
         createCelebrationParticles();
 
-        // Start sparkle effects
-        createSparkles();
+        // Sparkle effects removed for better performance
 
         // Success message
         console.log('All prototypes successfully integrated and demonstrated!');

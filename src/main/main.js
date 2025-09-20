@@ -217,7 +217,7 @@ function handleScannerPickup(event) {
         // Update message
         const message = document.querySelector('#message');
         if (message) {
-            message.setAttribute('value', 'Scanner acquired! Look at materials and press E to scan them.');
+            message.setAttribute('value', 'Scanner erhalten! Schaue Materialien an und druecke E zum Scannen.');
         }
 
         console.log('Scanner is now in inventory!');
@@ -226,7 +226,7 @@ function handleScannerPickup(event) {
         console.log('Scanner already picked up');
         const message = document.querySelector('#message');
         if (message) {
-            message.setAttribute('value', 'You already have the scanner in your inventory.');
+            message.setAttribute('value', 'Du hast den Scanner bereits im Inventar.');
         }
     }
 }
@@ -236,7 +236,7 @@ function scanMaterial(useDetailedInfo = false) {
     if (!hasScanner) {
         const message = document.querySelector('#message');
         if (message) {
-            message.setAttribute('value', 'You need the scanner first! Find the scanner tool.');
+            message.setAttribute('value', 'Du brauchst zuerst den Scanner! Finde das Scanner-Werkzeug.');
         }
         return;
     }
@@ -281,7 +281,7 @@ function scanMaterial(useDetailedInfo = false) {
                 // Update message
                 const message = document.querySelector('#message');
                 if (message) {
-                    message.setAttribute('value', `Scanning ${materialType}... Analysis complete!`);
+                    message.setAttribute('value', `Scanne ${materialType}... Analyse abgeschlossen!`);
                 }
 
                 materialsScanned++;
@@ -290,7 +290,7 @@ function scanMaterial(useDetailedInfo = false) {
                 // Not looking at scannable material
                 const message = document.querySelector('#message');
                 if (message) {
-                    message.setAttribute('value', 'Look at a material and press E to scan it!');
+                    message.setAttribute('value', 'Schaue ein Material an und druecke E zum Scannen!');
                 }
             }
         }
@@ -330,7 +330,7 @@ function handleMaterialPickup(event) {
         // Update message
         const message = document.querySelector('#message');
         if (message) {
-            message.setAttribute('value', `Holding ${materialType}! Press E to scan anything you look at, Q to drop.`);
+            message.setAttribute('value', `Halte ${materialType}! Druecke E zum Scannen, Q zum Fallen lassen.`);
         }
 
         console.log('Material is now held!');
@@ -339,7 +339,7 @@ function handleMaterialPickup(event) {
         console.log('Already holding a material');
         const message = document.querySelector('#message');
         if (message) {
-            message.setAttribute('value', `Already holding ${heldMaterialType}! Press Q to drop it first.`);
+            message.setAttribute('value', `Halte bereits ${heldMaterialType}! Druecke Q zum Fallen lassen.`);
         }
     }
 }
@@ -392,7 +392,7 @@ function handleMaterialDrop(event) {
         // Update message
         const message = document.querySelector('#message');
         if (message) {
-            message.setAttribute('value', `Dropped ${droppedMaterialType}! You can pick it up again or find other materials.`);
+            message.setAttribute('value', `${droppedMaterialType} fallen gelassen! Du kannst es wieder aufheben.`);
         }
 
         console.log(`Dropped ${droppedMaterialType} at position:`, dropX, dropY, dropZ);
@@ -400,7 +400,7 @@ function handleMaterialDrop(event) {
     } else {
         const message = document.querySelector('#message');
         if (message) {
-            message.setAttribute('value', 'Not holding anything to drop!');
+            message.setAttribute('value', 'Nichts zum Fallen lassen in der Hand!');
         }
     }
 }
@@ -479,13 +479,13 @@ function handleSortingSpot(event) {
                 'spot7': '2nd best',
                 'spot8': 'best CO2'
             };
-            message.setAttribute('value', `${currentMaterialType} placed on ${spotNames[spotId] || spotId} spot. Sort all 8 materials by CO2 impact!`);
+            message.setAttribute('value', `${currentMaterialType} auf ${spotNames[spotId] || spotId} Platz. Sortiere alle 8 Materialien nach CO2-Bilanz!`);
         }
 
     } else {
         const message = document.querySelector('#message');
         if (message) {
-            message.setAttribute('value', 'Pick up a material first!');
+            message.setAttribute('value', 'Nimm zuerst ein Material auf!');
         }
     }
 }
@@ -528,7 +528,7 @@ function handlePlacedMaterialClick(event) {
     // Update message
     const message = document.querySelector('#message');
     if (message) {
-        message.setAttribute('value', `Picked up ${materialType} again! Click on a sorting spot to place it.`);
+        message.setAttribute('value', `${materialType} wieder aufgenommen! Klicke auf einen Sortierplatz.`);
     }
 
     console.log('Material picked up from spot:', materialType);
@@ -579,7 +579,7 @@ function updateSpotColors() {
     if (correctPlacements === 8) {
         const message = document.querySelector('#message');
         if (message) {
-            message.setAttribute('value', 'Perfect! Materials sorted correctly. A key has appeared!');
+            message.setAttribute('value', 'Perfekt! Materialien wurden richtig sortiert. \n Ein Schlüssel ist erschienen!');
         }
         dropKey();
     }
@@ -653,7 +653,7 @@ function completePuzzle() {
 
     const message = document.querySelector('#message');
     if (message) {
-        message.setAttribute('value', '🎉 PUZZLE COMPLETED! 🎉\nAll prototypes integrated successfully!\nClick the green exit door to finish.');
+        message.setAttribute('value', 'Escape Room ABGESCHLOSSEN!\n\nKlicke auf die Ausgangstür, um zu beenden.');
     }
 }
 
