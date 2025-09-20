@@ -1,6 +1,23 @@
 # BW-DEST-GROUP7
 
-VR Escape Room
+VR Escape Room - Sustainability-focused educational experience
+
+## Room Structure
+
+### Main Flow
+- **Entrance**: Welcome area with instructions and START button
+- **Main Room**: Integrated puzzle combining all prototypes (CO₂ material sorting with scanner)
+- **End Room**: Celebration and navigation to individual prototypes
+
+### Individual Prototype Rooms
+- **Room 1**: Key Finding Prototype
+- **Room 2**: Material Display Prototype
+- **Room 3**: Wood Pickup Prototype
+- **Room 4**: Scanner System Prototype
+- **Room 5**: Material Sorting Prototype (with locked backdoor)
+- **Room 6**: Wall Cutting/Saw Prototype
+
+All individual rooms are now isolated (doors replaced with walls) and accessible only through the End Room navigation.
 
 ## Development
 
@@ -27,10 +44,13 @@ This project uses a Git branching strategy optimized for design thinking and ite
 ### Branch Structure
 ```
 main                    # Stable integrated versions
-├── room1-puzzles      # Room 1 development & iteration
-├── room2-puzzles      # Room 2 development & iteration  
-├── room3-puzzles      # Room 3 development & iteration
-├── room4-puzzles      # Room 4 development & iteration
+├── room1-puzzles      # Room 1 development & iteration (Key Finding)
+├── room2-puzzles      # Room 2 development & iteration (Material Display)
+├── room3-puzzles      # Room 3 development & iteration (Wood Pickup)
+├── room4-puzzles      # Room 4 development & iteration (Scanner System)
+├── room5-puzzles      # Room 5 development & iteration (Material Sorting)
+├── room6-puzzles      # Room 6 development & iteration (Wall Cutting/Saw)
+├── main-integration   # Main room combining all prototypes
 └── entrance-system    # Entrance/navigation improvements
 ```
 
